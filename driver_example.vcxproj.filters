@@ -1,0 +1,75 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="16.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="D:\GitHub Cloned Repositories\Simple-OpenVR-Driver-Tutorial\driver_files\src\Driver\ControllerDevice.cpp">
+      <Filter>Source Files\Driver</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\GitHub Cloned Repositories\Simple-OpenVR-Driver-Tutorial\driver_files\src\Driver\HMDDevice.cpp">
+      <Filter>Source Files\Driver</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\GitHub Cloned Repositories\Simple-OpenVR-Driver-Tutorial\driver_files\src\Driver\TrackerDevice.cpp">
+      <Filter>Source Files\Driver</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\GitHub Cloned Repositories\Simple-OpenVR-Driver-Tutorial\driver_files\src\Driver\TrackingReferenceDevice.cpp">
+      <Filter>Source Files\Driver</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\GitHub Cloned Repositories\Simple-OpenVR-Driver-Tutorial\driver_files\src\Driver\VRDriver.cpp">
+      <Filter>Source Files\Driver</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\GitHub Cloned Repositories\Simple-OpenVR-Driver-Tutorial\driver_files\src\Native\DriverFactory.cpp">
+      <Filter>Source Files\Native</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="D:\GitHub Cloned Repositories\Simple-OpenVR-Driver-Tutorial\driver_files\src\Driver\ControllerDevice.hpp">
+      <Filter>Header Files\Driver</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\GitHub Cloned Repositories\Simple-OpenVR-Driver-Tutorial\driver_files\src\Driver\DeviceType.hpp">
+      <Filter>Header Files\Driver</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\GitHub Cloned Repositories\Simple-OpenVR-Driver-Tutorial\driver_files\src\Driver\HMDDevice.hpp">
+      <Filter>Header Files\Driver</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\GitHub Cloned Repositories\Simple-OpenVR-Driver-Tutorial\driver_files\src\Driver\IVRDevice.hpp">
+      <Filter>Header Files\Driver</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\GitHub Cloned Repositories\Simple-OpenVR-Driver-Tutorial\driver_files\src\Driver\IVRDriver.hpp">
+      <Filter>Header Files\Driver</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\GitHub Cloned Repositories\Simple-OpenVR-Driver-Tutorial\driver_files\src\Driver\TrackerDevice.hpp">
+      <Filter>Header Files\Driver</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\GitHub Cloned Repositories\Simple-OpenVR-Driver-Tutorial\driver_files\src\Driver\TrackingReferenceDevice.hpp">
+      <Filter>Header Files\Driver</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\GitHub Cloned Repositories\Simple-OpenVR-Driver-Tutorial\driver_files\src\Driver\VRDriver.hpp">
+      <Filter>Header Files\Driver</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\GitHub Cloned Repositories\Simple-OpenVR-Driver-Tutorial\driver_files\src\Native\DriverFactory.hpp">
+      <Filter>Header Files\Native</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="D:\GitHub Cloned Repositories\Simple-OpenVR-Driver-Tutorial\CMakeLists.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{C7BA5DAF-02DD-3CA5-B495-7D81704EA3EB}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Driver">
+      <UniqueIdentifier>{339A952B-2009-30BC-9475-46E225F494CF}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Native">
+      <UniqueIdentifier>{0F324A26-5AAC-310B-BF15-21CBCC348E12}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{1CCFDC3E-BDE2-3AD8-A04C-4B160C589347}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Driver">
+      <UniqueIdentifier>{AA3C8264-19E4-332A-91FE-70ED902628CD}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Native">
+      <UniqueIdentifier>{D95EFF86-74B9-31F5-9EB8-A0E13C4B0AF9}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

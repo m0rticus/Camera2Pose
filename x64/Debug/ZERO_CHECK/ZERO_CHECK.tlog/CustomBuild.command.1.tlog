@@ -1,0 +1,10 @@
+^D:\GITHUB CLONED REPOSITORIES\SIMPLE-OPENVR-DRIVER-TUTORIAL\CMAKEFILES\3C4D331EA1DAAC6A9C59124419C94A12\GENERATE.STAMP.RULE
+setlocal
+"C:\Program Files\CMake\bin\cmake.exe" "-SD:/GitHub Cloned Repositories/Simple-OpenVR-Driver-Tutorial" "-BD:/GitHub Cloned Repositories/Simple-OpenVR-Driver-Tutorial" --check-stamp-list CMakeFiles/generate.stamp.list --vs-solution-file "D:/GitHub Cloned Repositories/Simple-OpenVR-Driver-Tutorial/Simple_SteamVR_Driver_Tutorial.sln"
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd
