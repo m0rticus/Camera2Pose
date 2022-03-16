@@ -1,8 +1,8 @@
 #include "VRDriver.hpp"
-#include <Driver/HMDDevice.hpp>
+// #include <Driver/HMDDevice.hpp>
 #include <Driver/TrackerDevice.hpp>
-#include <Driver/ControllerDevice.hpp>
-#include <Driver/TrackingReferenceDevice.hpp>
+// #include <Driver/ControllerDevice.hpp>
+// #include <Driver/TrackingReferenceDevice.hpp>
 
 vr::EVRInitError ExampleDriver::VRDriver::Init(vr::IVRDriverContext* pDriverContext)
 {
