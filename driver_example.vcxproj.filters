@@ -1,16 +1,10 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="16.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <ClCompile Include="D:\GitHub Cloned Repositories\Simple-OpenVR-Driver-Tutorial\driver_files\src\Driver\ControllerDevice.cpp">
-      <Filter>Source Files\Driver</Filter>
-    </ClCompile>
     <ClCompile Include="D:\GitHub Cloned Repositories\Simple-OpenVR-Driver-Tutorial\driver_files\src\Driver\HMDDevice.cpp">
       <Filter>Source Files\Driver</Filter>
     </ClCompile>
     <ClCompile Include="D:\GitHub Cloned Repositories\Simple-OpenVR-Driver-Tutorial\driver_files\src\Driver\TrackerDevice.cpp">
-      <Filter>Source Files\Driver</Filter>
-    </ClCompile>
-    <ClCompile Include="D:\GitHub Cloned Repositories\Simple-OpenVR-Driver-Tutorial\driver_files\src\Driver\TrackingReferenceDevice.cpp">
       <Filter>Source Files\Driver</Filter>
     </ClCompile>
     <ClCompile Include="D:\GitHub Cloned Repositories\Simple-OpenVR-Driver-Tutorial\driver_files\src\Driver\VRDriver.cpp">
@@ -21,9 +15,6 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="D:\GitHub Cloned Repositories\Simple-OpenVR-Driver-Tutorial\driver_files\src\Driver\ControllerDevice.hpp">
-      <Filter>Header Files\Driver</Filter>
-    </ClInclude>
     <ClInclude Include="D:\GitHub Cloned Repositories\Simple-OpenVR-Driver-Tutorial\driver_files\src\Driver\DeviceType.hpp">
       <Filter>Header Files\Driver</Filter>
     </ClInclude>
@@ -37,9 +28,6 @@
       <Filter>Header Files\Driver</Filter>
     </ClInclude>
     <ClInclude Include="D:\GitHub Cloned Repositories\Simple-OpenVR-Driver-Tutorial\driver_files\src\Driver\TrackerDevice.hpp">
-      <Filter>Header Files\Driver</Filter>
-    </ClInclude>
-    <ClInclude Include="D:\GitHub Cloned Repositories\Simple-OpenVR-Driver-Tutorial\driver_files\src\Driver\TrackingReferenceDevice.hpp">
       <Filter>Header Files\Driver</Filter>
     </ClInclude>
     <ClInclude Include="D:\GitHub Cloned Repositories\Simple-OpenVR-Driver-Tutorial\driver_files\src\Driver\VRDriver.hpp">
