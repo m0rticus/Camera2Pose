@@ -1,3 +1,7 @@
 /build
 /CMakeFiles
 /.vs
+driver_example.dir/
+Debug/
+/CMakeCache.txt
+/cmake_install.cmake

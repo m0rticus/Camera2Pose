@@ -21,7 +21,11 @@ vr::EVRInitError ExampleDriver::VRDriver::Init(vr::IVRDriverContext* pDriverCont
     // this->AddDevice(std::make_shared<ControllerDevice>("Example_ControllerDevice_Right", ControllerDevice::Handedness::RIGHT));
 
     // Add a tracker
-    this->AddDevice(std::make_shared<TrackerDevice>("Example_TrackerDevice"));
+    this->AddDevice(std::make_shared<TrackerDevice>("Jason"));
+    this->AddDevice(std::make_shared<TrackerDevice>("Emory"));
+    this->AddDevice(std::make_shared<TrackerDevice>("Matthew"));
+    this->AddDevice(std::make_shared<TrackerDevice>("Chris"));
+    this->AddDevice(std::make_shared<TrackerDevice>("Alexis"));
 
     // Add a couple tracking references
     // this->AddDevice(std::make_shared<TrackingReferenceDevice>("Example_TrackingReference_A"));
