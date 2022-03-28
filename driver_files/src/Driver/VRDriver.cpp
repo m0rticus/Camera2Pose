@@ -14,7 +14,7 @@ vr::EVRInitError ExampleDriver::VRDriver::Init(vr::IVRDriverContext* pDriverCont
     Log("Activating ExampleDriver...");
 
     // Add a HMD
-    // this->AddDevice(std::make_shared<HMDDevice>("Example_HMDDevice"));
+    this->AddDevice(std::make_shared<HMDDevice>("Example_HMDDevice"));
 
     // Add a couple controllers
     // this->AddDevice(std::make_shared<ControllerDevice>("Example_ControllerDevice_Left", ControllerDevice::Handedness::LEFT));

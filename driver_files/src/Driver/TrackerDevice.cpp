@@ -61,8 +61,8 @@ void ExampleDriver::TrackerDevice::Update()
 
         linalg::vec<float, 3> final_pose = hmd_pose_offset + hmd_position;
 
-        pose.vecPosition[0] = final_pose.x;
-        pose.vecPosition[1] = final_pose.y;
+        pose.vecPosition[0] = final_pose.x + 5;
+        pose.vecPosition[1] = final_pose.y + 5;
         pose.vecPosition[2] = final_pose.z;
 
         pose.qRotation.w = hmd_rotation.w;

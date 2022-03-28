@@ -3,5 +3,13 @@
 /.vs
 driver_example.dir/
 Debug/
+out/
+x64/
 /CMakeCache.txt
 /cmake_install.cmake
+/ALL_BUILD.vcxproj
+/ALL_BUILD.vcxproj.filters
+/driver_example.vcxproj
+/driver_example.vcxproj.filters
+/ZERO_CHECK.vcxproj
+/ZERO_CHECK.vcxproj.filters
