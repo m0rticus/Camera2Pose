@@ -5,9 +5,13 @@ Not solely my work. Based off of Terminal29's repository.
 ## Requirements
 
 Python 3.9.x
+
 Visual Studio 2019 (Tested on Community Edition)
+
 OpenCV-Python (pip install opencv-contrib-python)
+
 Mediapipe (pip install mediapipe)
+
 A camera for pose estimation.
 
 ## Tutorial
