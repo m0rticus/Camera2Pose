@@ -18,7 +18,7 @@ A camera for pose estimation.
 
 To begin the project:
 
-Open Visual Studio 2019. Clone the repository. Right click the solution file and click build. Navigate to the Debug folder and copy the example folder.
+Open Visual Studio 2019. Clone the repository. Type "cmake ." and right click the solution file and click build. Navigate to the Debug folder and copy the example folder.
 
 From there, navigate to SteamVR drivers folder. Paste the example driver here.
 
