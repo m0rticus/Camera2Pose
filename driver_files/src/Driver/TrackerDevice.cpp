@@ -71,6 +71,10 @@ void ExampleDriver::TrackerDevice::Update()
         pose.qRotation.z = hmd_rotation.z;
     }
 
+    pose.vecPosition[0] = pose.vecPosition[0] + 3;
+    pose.vecPosition[1] = pose.vecPosition[0] + 6;
+    pose.vecPosition[2] = pose.vecPosition[0];
+
     // Post pose
     GetDriver()->GetDriverHost()->TrackedDevicePoseUpdated(this->device_index_, pose, sizeof(vr::DriverPose_t));
     this->last_pose_ = pose;
