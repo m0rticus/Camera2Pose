@@ -57,6 +57,9 @@ def main():
         success, img = cap.read()
         img = detector.findPose(img)
 
+
+
+
         # find a specific landmark and highlight
         lmList = detector.findPosition(img)
         if len(lmList) >= 29:

@@ -18,6 +18,10 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <string.h>
+#include <chrono>
+#include <iostream>
+#include <string>
+#include <sstream>
 
 #include <ctime>   
 
@@ -30,10 +34,19 @@ int main() {
 	char buffer[MAXLINE];
 	char *hello = "Hello from server";
 	struct sockaddr_in servaddr, cliaddr;
+	WSADATA wsa;
+
+    printf("\nInitialising Winsock...");
+    if (WSAStartup(MAKEWORD(2,2),&wsa) != 0)
+    {
+        printf("Failed. Error Code : %d",WSAGetLastError());
+        exit(EXIT_FAILURE);
+    }
+    printf("Initialised.\n");
 	
 	// Creating socket file descriptor
-	if ( (sockfd = socket(AF_INET, SOCK_DGRAM, 0)) <= 0 ) {
-		perror("socket creation failed");
+	if ( (sockfd = socket(AF_INET, SOCK_DGRAM, 0)) <= 0) {
+		printf(WSAGetLastError() + "\n");
 		exit(EXIT_FAILURE);
 	}
 	
@@ -49,7 +62,7 @@ int main() {
 	if ( bind(sockfd, (const struct sockaddr *)&servaddr,
 			sizeof(servaddr)) < 0 )
 	{
-		perror("bind failed");
+		printf("Failed, error code of " + WSAGetLastError());
 		exit(EXIT_FAILURE);
 	}
 	
@@ -65,6 +78,9 @@ int main() {
         sendto(sockfd, (const char *)hello, strlen(hello), 0,(const struct sockaddr *) &cliaddr,
                 len);
         printf("Hello message sent.\n");
+		auto time = std::chrono::steady_clock::now();
+		std::cout << std::stof(buffer) << std::endl;
+		std::cout << std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now() - time).count() << std::endl;
     }
 
 	
