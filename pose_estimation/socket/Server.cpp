@@ -75,9 +75,6 @@ int main() {
                     (socklen_t* ) &len);
         buffer[n] = '\0';
         printf("Client : %s\n", buffer);
-        sendto(sockfd, (const char *)hello, strlen(hello), 0,(const struct sockaddr *) &cliaddr,
-                len);
-        printf("Hello message sent.\n");
 		auto time = std::chrono::steady_clock::now();
 		std::cout << std::stof(buffer) << std::endl;
 		std::cout << std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now() - time).count() << std::endl;
