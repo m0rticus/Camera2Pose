@@ -72,8 +72,8 @@ void ExampleDriver::TrackerDevice::Update()
     }
 
     pose.vecPosition[0] = pose.vecPosition[0] + 3;
-    pose.vecPosition[1] = pose.vecPosition[0] + 6;
-    pose.vecPosition[2] = pose.vecPosition[0];
+    pose.vecPosition[1] = pose.vecPosition[1] + 6;
+    pose.vecPosition[2] = pose.vecPosition[2];
 
     // Post pose
     GetDriver()->GetDriverHost()->TrackedDevicePoseUpdated(this->device_index_, pose, sizeof(vr::DriverPose_t));
@@ -157,4 +157,11 @@ void ExampleDriver::TrackerDevice::DebugRequest(const char* pchRequest, char* pc
 vr::DriverPose_t ExampleDriver::TrackerDevice::GetPose()
 {
     return last_pose_;
+}
+
+void ExampleDriver::setPoseOffset(float x, float y, float z) {
+    pose = last_pose_;
+    pose.vecPosition[0] = pose.vecPosition[0] + x;
+    pose.vecPosition[1] = pose.vecPosition[1] + y;
+    pose.vecPosition[2] = pose.vecPosition[2] + z;
 }
