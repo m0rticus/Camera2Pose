@@ -33,21 +33,23 @@ int main() {
 	char buffer[MAXLINE];
 	char *hello = "Hello from server";
 	struct sockaddr_in servaddr, cliaddr;
-	WSADATA wsa;
+    #ifdef _WIN32
+        WSADATA wsa;
 
-    printf("\nInitialising Winsock...");
-    if (WSAStartup(MAKEWORD(2,2),&wsa) != 0)
-    {
-        printf("Failed. Error Code : %d",WSAGetLastError());
-        exit(EXIT_FAILURE);
-    }
-    printf("Initialised.\n");
-	
-	// Creating socket file descriptor
-	if ( (sockfd = socket(AF_INET, SOCK_DGRAM, 0)) <= 0) {
-		printf(WSAGetLastError() + "\n");
-		exit(EXIT_FAILURE);
-	}
+        printf("\nInitialising Winsock...");
+        if (WSAStartup(MAKEWORD(2,2),&wsa) != 0)
+        {
+            printf("Failed. Error Code : %d",WSAGetLastError());
+            exit(EXIT_FAILURE);
+        }
+        printf("Initialised.\n");
+        
+        // Creating socket file descriptor
+        if ( (sockfd = socket(AF_INET, SOCK_DGRAM, 0)) <= 0) {
+            printf(WSAGetLastError() + "\n");
+            exit(EXIT_FAILURE);
+        }
+    #endif
 	
 	memset(&servaddr, 0, sizeof(servaddr));
 	memset(&cliaddr, 0, sizeof(cliaddr));
@@ -61,7 +63,11 @@ int main() {
 	if ( bind(sockfd, (const struct sockaddr *)&servaddr,
 			sizeof(servaddr)) < 0 )
 	{
+        #ifdef _WIN32
 		printf("Failed, error code of " + WSAGetLastError());
+        #else
+		perror("bind failed");
+        #endif
 		exit(EXIT_FAILURE);
 	}
 	
