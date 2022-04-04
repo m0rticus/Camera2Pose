@@ -26,6 +26,17 @@
 
 #define PORT 5005
 #define MAXLINE 1024
+class SocketServer{ 
+    SocketServer(int port = 5005){ 
+        servaddr.sin_family = AF_INET; // IPv4
+        servaddr.sin_addr.s_addr = INADDR_ANY;
+        servaddr.sin_port = htons(port);
+    }
+    private:
+        struct sockaddr_in servaddr, cliaddr;
+    	int sockfd;
+
+};
 
 // Driver code
 int main() {
@@ -44,12 +55,14 @@ int main() {
         }
         printf("Initialised.\n");
         
-        // Creating socket file descriptor
-        if ( (sockfd = socket(AF_INET, SOCK_DGRAM, 0)) <= 0) {
-            printf(WSAGetLastError() + "\n");
-            exit(EXIT_FAILURE);
-        }
     #endif
+    // Creating socket file descriptor
+    if ( (sockfd = socket(AF_INET, SOCK_DGRAM, 0)) <= 0) {
+        #ifdef _WIN32
+        printf(WSAGetLastError() + "\n");
+        #endif
+        exit(EXIT_FAILURE);
+    }
 	
 	memset(&servaddr, 0, sizeof(servaddr));
 	memset(&cliaddr, 0, sizeof(cliaddr));
