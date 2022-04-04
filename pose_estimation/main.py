@@ -1,11 +1,10 @@
 import cv2
 import mediapipe as mp
 import time
+import socket.Client as socketClient
 
 ###############################
 wCam, hCam = 1280, 720
-
-
 ###############################
 
 class PoseDetector:
@@ -51,22 +50,20 @@ def main():
     cap.set(4, hCam)
     prevTime = 0
     detector = PoseDetector(False, False, True, 0.8, 0.3)
+    socket_client = socketClient.CommunicationSocket()
 
     while True:
         # read in the image
         success, img = cap.read()
         img = detector.findPose(img)
 
-
-
-
         # find a specific landmark and highlight
         lmList = detector.findPosition(img)
-        if len(lmList) >= 29:
-            print(lmList[27])
-            cv2.circle(img, (lmList[28][1], lmList[28][2]), 15, (255, 255, 0), cv2.FILLED)
-            print(lmList[28])
-            cv2.circle(img, (lmList[27][1], lmList[27][2]), 15, (255, 255, 0), cv2.FILLED)
+        # if len(lmList) >= 29:
+        #     print(lmList[27])
+        #     cv2.circle(img, (lmList[28][1], lmList[28][2]), 15, (255, 255, 0), cv2.FILLED)
+        #     print(lmList[28])
+        #     cv2.circle(img, (lmList[27][1], lmList[27][2]), 15, (255, 255, 0), cv2.FILLED)
 
         # calculate fps
         currTime = time.time()
