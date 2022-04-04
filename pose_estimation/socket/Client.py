@@ -2,7 +2,7 @@ import socket
 
 class CommunicationSocket:
 
-	def __init__():
+	def __init__(self, host = "127.0.0.1", port = 5005):
 		host = "127.0.0.1"  # as both code is running on same pc
 		port = 5005  # socket server port number
 
@@ -17,8 +17,7 @@ class CommunicationSocket:
 		
 def client_program():
     client_socket = CommunicationSocket()
-	
-	message = input('-->')
+    message = input('-->')
 	
     while message.lower().strip() != 'bye':
         client_socket.sendMessage(message)  # send message
