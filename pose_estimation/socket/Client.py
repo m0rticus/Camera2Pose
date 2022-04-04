@@ -3,8 +3,8 @@ import socket
 class CommunicationSocket:
 
 	def __init__(self, host = "127.0.0.1", port = 5005):
-		host = "127.0.0.1"  # as both code is running on same pc
-		port = 5005  # socket server port number
+		self.host = host # as both code is running on same pc
+		self.port = port  # socket server port number
 
 		self.client_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)  # instantiate
 		self.client_socket.connect((host, port))  # connect to the server
