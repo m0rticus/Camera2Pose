@@ -24,13 +24,11 @@
 
 #include <ctime>   
 
-#define PORT 5005
 #define MAXLINE 1024
 class SocketServer{ 
     public: 
-    SocketServer(int aPort = 5005, int aMaxline = 1024): port(aPort), maxline(aMaxline){ 
+    SocketServer(int aPort = 5005): port(aPort){ 
         
-
         #ifdef _WIN32
             printf("\nInitialising Winsock...");
             if (WSAStartup(MAKEWORD(2,2),&wsa) != 0)
@@ -66,10 +64,9 @@ class SocketServer{
         }
     }
     std::string recvMessage(){ 
-        char buffer[maxline];
         int n;
         int len = sizeof(cliaddr);
-        n = recvfrom(sockfd, (char *)buffer, MAXLINE,
+        n = recvfrom(sockfd, buffer, MAXLINE,
                     0, ( struct sockaddr *) &cliaddr,
                     (socklen_t* ) &len);
         buffer[n] = '\0';
@@ -80,7 +77,7 @@ class SocketServer{
         struct sockaddr_in servaddr, cliaddr;
     	int sockfd;
         int port; 
-        int maxline;
+        char buffer[MAXLINE]; 
         #ifdef _WIN32
             WSADATA wsa;
         #endif
