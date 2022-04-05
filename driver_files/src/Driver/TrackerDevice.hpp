@@ -28,8 +28,8 @@ namespace ExampleDriver {
             virtual void DebugRequest(const char* pchRequest, char* pchResponseBuffer, uint32_t unResponseBufferSize) override;
             virtual vr::DriverPose_t GetPose() override;
             
-            void setPoseOffset(float x, float y, float z);
-
+            vr::DriverPose_t setPoseOffset(float x, float y, float z);
+            vr::DriverPose_t setPose(float x, float y, float z);
     private:
         vr::TrackedDeviceIndex_t device_index_ = vr::k_unTrackedDeviceIndexInvalid;
         std::string serial_;
