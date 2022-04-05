@@ -17,7 +17,7 @@ class CommunicationSocket:
 		
 def client_program():
     client_socket = CommunicationSocket()
-    message = input('-->')
+    message = input(' ->')
 	
     while message.lower().strip() != 'bye':
         client_socket.sendMessage(message)  # send message
