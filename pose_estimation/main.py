@@ -1,7 +1,7 @@
 import cv2
 import mediapipe as mp
 import time
-import socket.Client as socketClient
+# import socket.Client as socketClient
 
 ###############################
 wCam, hCam = 1280, 720
@@ -9,7 +9,7 @@ wCam, hCam = 1280, 720
 
 class PoseDetector:
 
-    def __init__(self, mode=False, upBody=False, smooth=True, detectCon=0.5, trackCon=0.5):
+    def __init__(self, mode=True, upBody=False, smooth=True, detectCon=0.95, trackCon=0.9):
         self.mode = mode
         self.upBody = upBody
         self.smooth = smooth
@@ -18,7 +18,7 @@ class PoseDetector:
 
         self.mpDraw = mp.solutions.drawing_utils
         self.mpPose = mp.solutions.pose
-        self.pose = self.mpPose.Pose(self.mode, self.upBody, self.smooth, False, False, self.detectCon, self.trackCon)
+        self.pose = self.mpPose.Pose(self.mode, 2, self.smooth, False, False, self.detectCon, self.trackCon)
 
     def findPose(self, img, draw=True):
         img.flags.writeable = False
@@ -49,8 +49,8 @@ def main():
     cap.set(3, wCam)
     cap.set(4, hCam)
     prevTime = 0
-    detector = PoseDetector(False, False, True, 0.8, 0.3)
-    socket_client = socketClient.CommunicationSocket()
+    detector = PoseDetector()
+    # socket_client = socketClient.CommunicationSocket()
 
     while True:
         # read in the image
