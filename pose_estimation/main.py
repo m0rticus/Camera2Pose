@@ -9,7 +9,7 @@ wCam, hCam = 1280, 720
 
 class PoseDetector:
 
-    def __init__(self, mode=True, upBody=False, smooth=True, detectCon=0.95, trackCon=0.9):
+    def __init__(self, mode=True, upBody=False, smooth=True, detectCon=0.8, trackCon=0.95):
         self.mode = mode
         self.upBody = upBody
         self.smooth = smooth
@@ -18,7 +18,7 @@ class PoseDetector:
 
         self.mpDraw = mp.solutions.drawing_utils
         self.mpPose = mp.solutions.pose
-        self.pose = self.mpPose.Pose(self.mode, 2, self.smooth, False, False, self.detectCon, self.trackCon)
+        self.pose = self.mpPose.Pose(self.mode, 1, self.smooth, False, False, self.detectCon, self.trackCon)
 
     def findPose(self, img, draw=True):
         img.flags.writeable = False
