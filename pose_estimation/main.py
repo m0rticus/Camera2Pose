@@ -45,7 +45,7 @@ class PoseDetector:
 
 def main():
     # initialize camera
-    cap = cv2.VideoCapture(0)
+    cap = cv2.VideoCapture(0, cv2.CAP_DSHOW)
     cap.set(3, wCam)
     cap.set(4, hCam)
     prevTime = 0
