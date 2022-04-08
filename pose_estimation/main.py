@@ -1,3 +1,4 @@
+from Camera2Pose.pose_estimation.socket.Client import CommunicationSocket, client_program
 import cv2
 import mediapipe as mp
 import time
@@ -64,6 +65,9 @@ def main():
         #     cv2.circle(img, (lmList[28][1], lmList[28][2]), 15, (255, 255, 0), cv2.FILLED)
         #     print(lmList[28])
         #     cv2.circle(img, (lmList[27][1], lmList[27][2]), 15, (255, 255, 0), cv2.FILLED)
+
+        # send landmark data to server
+        client_program.send_landmark(lmList)
 
         # calculate fps
         currTime = time.time()
