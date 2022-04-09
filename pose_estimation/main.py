@@ -1,12 +1,6 @@
-from Camera2Pose.pose_estimation.socket.Client import CommunicationSocket, client_program
 import cv2
 import mediapipe as mp
 import time
-<<<<<<< HEAD
-import socket.Client as socketClient
-=======
-# import socket.Client as socketClient
->>>>>>> master
 
 ###############################
 wCam, hCam = 1280, 720
@@ -54,13 +48,8 @@ def main():
     cap.set(3, wCam)
     cap.set(4, hCam)
     prevTime = 0
-<<<<<<< HEAD
-    detector = PoseDetector(False, False, True, 0.8, 0.3)
-    socket_client = socketClient.CommunicationSocket()
-=======
     detector = PoseDetector()
     # socket_client = socketClient.CommunicationSocket()
->>>>>>> master
 
     while True:
         # read in the image
@@ -74,12 +63,6 @@ def main():
         #     cv2.circle(img, (lmList[28][1], lmList[28][2]), 15, (255, 255, 0), cv2.FILLED)
         #     print(lmList[28])
         #     cv2.circle(img, (lmList[27][1], lmList[27][2]), 15, (255, 255, 0), cv2.FILLED)
-<<<<<<< HEAD
-
-        # send landmark data to server
-        client_program.send_landmark(lmList)
-=======
->>>>>>> master
 
         # calculate fps
         currTime = time.time()
