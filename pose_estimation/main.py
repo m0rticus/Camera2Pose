@@ -2,7 +2,11 @@ from Camera2Pose.pose_estimation.socket.Client import CommunicationSocket, clien
 import cv2
 import mediapipe as mp
 import time
+<<<<<<< HEAD
 import socket.Client as socketClient
+=======
+# import socket.Client as socketClient
+>>>>>>> master
 
 ###############################
 wCam, hCam = 1280, 720
@@ -10,7 +14,7 @@ wCam, hCam = 1280, 720
 
 class PoseDetector:
 
-    def __init__(self, mode=False, upBody=False, smooth=True, detectCon=0.5, trackCon=0.5):
+    def __init__(self, mode=True, upBody=False, smooth=True, detectCon=0.8, trackCon=0.95):
         self.mode = mode
         self.upBody = upBody
         self.smooth = smooth
@@ -19,7 +23,7 @@ class PoseDetector:
 
         self.mpDraw = mp.solutions.drawing_utils
         self.mpPose = mp.solutions.pose
-        self.pose = self.mpPose.Pose(self.mode, self.upBody, self.smooth, False, False, self.detectCon, self.trackCon)
+        self.pose = self.mpPose.Pose(self.mode, 1, self.smooth, False, False, self.detectCon, self.trackCon)
 
     def findPose(self, img, draw=True):
         img.flags.writeable = False
@@ -46,12 +50,17 @@ class PoseDetector:
 
 def main():
     # initialize camera
-    cap = cv2.VideoCapture(0)
+    cap = cv2.VideoCapture(0, cv2.CAP_DSHOW)
     cap.set(3, wCam)
     cap.set(4, hCam)
     prevTime = 0
+<<<<<<< HEAD
     detector = PoseDetector(False, False, True, 0.8, 0.3)
     socket_client = socketClient.CommunicationSocket()
+=======
+    detector = PoseDetector()
+    # socket_client = socketClient.CommunicationSocket()
+>>>>>>> master
 
     while True:
         # read in the image
@@ -65,9 +74,12 @@ def main():
         #     cv2.circle(img, (lmList[28][1], lmList[28][2]), 15, (255, 255, 0), cv2.FILLED)
         #     print(lmList[28])
         #     cv2.circle(img, (lmList[27][1], lmList[27][2]), 15, (255, 255, 0), cv2.FILLED)
+<<<<<<< HEAD
 
         # send landmark data to server
         client_program.send_landmark(lmList)
+=======
+>>>>>>> master
 
         # calculate fps
         currTime = time.time()

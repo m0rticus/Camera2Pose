@@ -44,32 +44,12 @@ void ExampleDriver::TrackerDevice::Update()
     // Find a HMD
     auto devices = GetDriver()->GetDevices();
     auto hmd = std::find_if(devices.begin(), devices.end(), [](const std::shared_ptr<IVRDevice>& device_ptr) {return device_ptr->GetDeviceType() == DeviceType::HMD; });
-    if (hmd != devices.end()) {
-        // Found a HMD
-        vr::DriverPose_t hmd_pose = (*hmd)->GetPose();
 
-        // Here we setup some transforms so our controllers are offset from the headset by a small amount so we can see them
-        linalg::vec<float, 3> hmd_position{ (float)hmd_pose.vecPosition[0], (float)hmd_pose.vecPosition[1], (float)hmd_pose.vecPosition[2] };
-        linalg::vec<float, 4> hmd_rotation{ (float)hmd_pose.qRotation.x, (float)hmd_pose.qRotation.y, (float)hmd_pose.qRotation.z, (float)hmd_pose.qRotation.w };
+    pose = setPoseOffset(3, 6, 0);
 
-        // Do shaking animation if haptic vibration was requested
-        float controller_y = -0.35f + 0.01f * std::sinf(8 * 3.1415f * vibrate_anim_state_);
-
-        linalg::vec<float, 3> hmd_pose_offset = { 0.f, controller_y, -0.5f };
-
-        hmd_pose_offset = linalg::qrot(hmd_rotation, hmd_pose_offset);
-
-        linalg::vec<float, 3> final_pose = hmd_pose_offset + hmd_position;
-
-        pose.vecPosition[0] = final_pose.x + 5;
-        pose.vecPosition[1] = final_pose.y + 10;
-        pose.vecPosition[2] = final_pose.z;
-
-        pose.qRotation.w = hmd_rotation.w;
-        pose.qRotation.x = hmd_rotation.x;
-        pose.qRotation.y = hmd_rotation.y;
-        pose.qRotation.z = hmd_rotation.z;
-    }
+    pose.vecPosition[0] = pose.vecPosition[0] + 3;
+    pose.vecPosition[1] = pose.vecPosition[1] + 6;
+    pose.vecPosition[2] = pose.vecPosition[2];
 
     pose.vecPosition[0] = pose.vecPosition[0] + 3;
     pose.vecPosition[1] = pose.vecPosition[1] + 6;
@@ -158,10 +138,27 @@ vr::DriverPose_t ExampleDriver::TrackerDevice::GetPose()
 {
     return last_pose_;
 }
+<<<<<<< HEAD
 
 void ExampleDriver::setPoseOffset(float x, float y, float z) {
     pose = last_pose_;
     pose.vecPosition[0] = pose.vecPosition[0] + x;
     pose.vecPosition[1] = pose.vecPosition[1] + y;
     pose.vecPosition[2] = pose.vecPosition[2] + z;
+=======
+vr::DriverPose_t ExampleDriver::TrackerDevice::setPoseOffset(float x, float y, float z) {
+    auto pose = last_pose_;
+    pose.vecPosition[0] = pose.vecPosition[0] + x;
+    pose.vecPosition[1] = pose.vecPosition[1] + y;
+    pose.vecPosition[2] = pose.vecPosition[2] + z;
+    return pose;
+}
+
+vr::DriverPose_t ExampleDriver::TrackerDevice::setPose(float x, float y, float z) {
+    auto pose = last_pose_;
+    pose.vecPosition[0] = x;
+    pose.vecPosition[1] = y;
+    pose.vecPosition[2] = z;
+    return pose;
+>>>>>>> master
 }

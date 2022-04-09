@@ -23,3 +23,5 @@ Open Visual Studio 2019. Clone the repository. Type "cmake ." and right click th
 From there, navigate to SteamVR drivers folder. Paste the example driver here.
 
 Run main.py in pose_estimation folder. This process will remain running to read pose data from your camera.
+
+
