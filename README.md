@@ -14,8 +14,6 @@ Mediapipe (pip install mediapipe)
 
 A camera for pose estimation.
 
-
-
 ## Tutorial
 
 To begin the project:
