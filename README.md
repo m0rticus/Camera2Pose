@@ -14,13 +14,6 @@ Mediapipe (pip install mediapipe)
 
 A camera for pose estimation.
 
-## Development Set up
-- To create a virtual environment, open Command Prompt and navigate to the repository's location. Type `python -m venv C2P-env` 
-- To activate the environment run 
-    - Windows: `C2P-env\Scripts\activate.bat`
-    - Unix/MacOs:  `source C2P-env/bin/activate`
-- To install all the python packages, navigate to the pose_estimation folder and run `python -m pip install -r req.txt`
-
 ## Tutorial
 
 To begin the project:
