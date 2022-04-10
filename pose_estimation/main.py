@@ -1,6 +1,7 @@
 import cv2
 import mediapipe as mp
 import time
+from poseSocket import Client as socketClient
 
 ###############################
 wCam, hCam = 1280, 720
@@ -8,7 +9,7 @@ wCam, hCam = 1280, 720
 
 class PoseDetector:
 
-    def __init__(self, mode=True, upBody=False, smooth=True, detectCon=0.8, trackCon=0.95):
+    def __init__(self, mode=True, upBody=False, smooth=True, detectCon=0.5, trackCon=0.95):
         self.mode = mode
         self.upBody = upBody
         self.smooth = smooth
@@ -38,7 +39,7 @@ class PoseDetector:
                 h, w, c = img.shape
                 # print(markId, landmark)
                 cx, cy, cz = int(landmark.x * w), int(landmark.y * h), int(landmark.z * c)
-                lmList.append([markId, cx, cy, cz])
+                lmList.append([cx, cy, cz])
                 # cv2.circle(img, (cx, cy), 10, (255, 0, 125), cv2.FILLED)
         return lmList
 
@@ -49,7 +50,7 @@ def main():
     cap.set(4, hCam)
     prevTime = 0
     detector = PoseDetector()
-    # socket_client = socketClient.CommunicationSocket()
+    socket_client = socketClient.CommunicationSocket()
 
     while True:
         # read in the image
@@ -58,6 +59,9 @@ def main():
 
         # find a specific landmark and highlight
         lmList = detector.findPosition(img)
+
+        if len(lmList) >= 32:
+            socket_client.send_landmark_data(lmList)
         # if len(lmList) >= 29:
         #     print(lmList[27])
         #     cv2.circle(img, (lmList[28][1], lmList[28][2]), 15, (255, 255, 0), cv2.FILLED)
@@ -73,6 +77,8 @@ def main():
         cv2.putText(img, f'FPS: {int(fps)}', (40, 70), cv2.FONT_HERSHEY_SIMPLEX, 3, (0, 255, 255), 3)
         cv2.imshow("Frame", img)
         cv2.waitKey(1)
+
+    socket_client.destroy()
 
 
 if __name__ == "__main__":
