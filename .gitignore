@@ -15,3 +15,5 @@ x64/
 /ZERO_CHECK.vcxproj.filters
 /Simple_SteamVR_Driver_Tutorial.sln
 /pose_estimation/C2P-env
+/pose_estimation/poseSocket/__pycache__
+/pose_estimation/poseSocket/a.exe

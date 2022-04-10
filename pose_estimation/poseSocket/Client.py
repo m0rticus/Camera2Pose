@@ -14,6 +14,10 @@ class CommunicationSocket:
 		
 	def destroy(self):
 		self.client_socket.close()
+
+	def send_landmark_data(self, lmList):
+		message = ' '.join([(' '.join([str(coordinate) for coordinate in landmark])) for landmark in lmList]) # convert two dimensional list to a string
+		self.sendMessage(message)
 		
 def client_program():
     client_socket = CommunicationSocket()
@@ -30,11 +34,11 @@ def client_program():
 # each coordinate for each landmark is sent to the server
 # all numbers are separated by space characters
 # lmList[0, ..., 32][x, y, z] -> x0 y0 z0 ... x32 y32 z32
-def send_landmark_data(lmList):
-	client_socket = CommunicationSocket()
-	message = ' '.join([(' '.join([str(coordinate) for coordinate in landmark])) for landmark in lmList]) # convert two dimensional list to a string
-	client_socket.sendMessage(message)
-	client_socket.destroy() # close the connection
+# def send_landmark_data(lmList):
+# 	client_socket = CommunicationSocket()
+# 	message = ' '.join([(' '.join([str(coordinate) for coordinate in landmark])) for landmark in lmList]) # convert two dimensional list to a string
+# 	client_socket.sendMessage(message)
+# 	client_socket.destroy() # close the connection
 	
 if __name__ == '__main__':
 	# use list to test operation of send_landmark function
