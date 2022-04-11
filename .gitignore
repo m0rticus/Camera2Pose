@@ -9,10 +9,13 @@ x64/
 /cmake_install.cmake
 /ALL_BUILD.vcxproj
 /ALL_BUILD.vcxproj.filters
+/ALL_BUILD.vcxproj.user
 /driver_example.vcxproj
 /driver_example.vcxproj.filters
+/driver_example.vcxproj.user
 /ZERO_CHECK.vcxproj
 /ZERO_CHECK.vcxproj.filters
+/ZERO_CHECK.vcxproj.user
 /Simple_SteamVR_Driver_Tutorial.sln
 /pose_estimation/C2P-env
 /pose_estimation/poseSocket/__pycache__
