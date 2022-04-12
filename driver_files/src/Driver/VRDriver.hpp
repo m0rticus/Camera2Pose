@@ -8,10 +8,10 @@
 #include <Driver/IVRDriver.hpp>
 #include <Driver/IVRDevice.hpp>
 
+class PoseSocketServer;
 namespace ExampleDriver {
     class VRDriver : public IVRDriver {
     public:
-
 
         // Inherited via IVRDriver
         virtual std::vector<std::shared_ptr<IVRDevice>> GetDevices() override;
@@ -35,6 +35,7 @@ namespace ExampleDriver {
         virtual ~VRDriver() = default;
 
     private:
+        PoseSocketServer* socketServer;
         std::vector<std::shared_ptr<IVRDevice>> devices_;
         std::vector<vr::VREvent_t> openvr_events_;
         std::chrono::milliseconds frame_timing_ = std::chrono::milliseconds(16);

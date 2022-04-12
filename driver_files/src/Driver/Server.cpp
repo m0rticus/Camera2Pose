@@ -1,11 +1,12 @@
-#include "Server.hpp"
+#pragma comment(lib, "Ws2_32.lib")
 
+#include <Driver/Server.hpp>
 #include <ctime>   
 #include <chrono>
 
 #define MAXLINE 1024
 
-SocketServer::SocketServer(int aPort = 5005): port(aPort){ 
+PoseSocketServer::PoseSocketServer(int aPort = 5005): port(aPort){ 
     #ifdef _WIN32
         printf("\nInitialising Winsock...");
         if (WSAStartup(MAKEWORD(2,2),&wsa) != 0)
@@ -41,7 +42,7 @@ SocketServer::SocketServer(int aPort = 5005): port(aPort){
     }
 }
 
-std::string SocketServer::recvMessage(){ 
+std::string PoseSocketServer::recvMessage(){ 
     int n;
     int len = sizeof(cliaddr);
     n = recvfrom(sockfd, buffer, MAXLINE,
@@ -86,6 +87,7 @@ int parse_landmark(std::string buffer, float (&landmark)[33][3])
     
 }
 
+/*
 // Driver code
 int main() {
 	SocketServer s = SocketServer(); 
@@ -102,3 +104,4 @@ int main() {
 	  	
 	return 0;
 }
+*/

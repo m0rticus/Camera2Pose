@@ -1,8 +1,9 @@
 #include "VRDriver.hpp"
 #include <Driver/HMDDevice.hpp>
 #include <Driver/TrackerDevice.hpp>
-// #include <Driver/ControllerDevice.hpp>
-// #include <Driver/TrackingReferenceDevice.hpp>
+#include <Driver/Server.hpp>
+
+#define MAXLINE 1024
 
 vr::EVRInitError ExampleDriver::VRDriver::Init(vr::IVRDriverContext* pDriverContext)
 {
@@ -16,10 +17,6 @@ vr::EVRInitError ExampleDriver::VRDriver::Init(vr::IVRDriverContext* pDriverCont
     // Add a HMD
     this->AddDevice(std::make_shared<HMDDevice>("Example_HMDDevice"));
 
-    // Add a couple controllers
-    // this->AddDevice(std::make_shared<ControllerDevice>("Example_ControllerDevice_Left", ControllerDevice::Handedness::LEFT));
-    // this->AddDevice(std::make_shared<ControllerDevice>("Example_ControllerDevice_Right", ControllerDevice::Handedness::RIGHT));
-
     // Add a tracker
     this->AddDevice(std::make_shared<TrackerDevice>("Jason"));
     this->AddDevice(std::make_shared<TrackerDevice>("Emory"));
@@ -27,10 +24,7 @@ vr::EVRInitError ExampleDriver::VRDriver::Init(vr::IVRDriverContext* pDriverCont
     this->AddDevice(std::make_shared<TrackerDevice>("Chris"));
     this->AddDevice(std::make_shared<TrackerDevice>("Alexis"));
 
-    // Add a couple tracking references
-    // this->AddDevice(std::make_shared<TrackingReferenceDevice>("Example_TrackingReference_A"));
-    // this->AddDevice(std::make_shared<TrackingReferenceDevice>("Example_TrackingReference_B"));
-
+    socketServer = new PoseSocketServer(5005);
     Log("ExampleDriver Loaded Successfully");
 
 	return vr::VRInitError_None;
@@ -38,6 +32,7 @@ vr::EVRInitError ExampleDriver::VRDriver::Init(vr::IVRDriverContext* pDriverCont
 
 void ExampleDriver::VRDriver::Cleanup()
 {
+    delete socketServer;
 }
 
 void ExampleDriver::VRDriver::RunFrame()

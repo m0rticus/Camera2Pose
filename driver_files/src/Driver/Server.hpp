@@ -1,5 +1,4 @@
 // Server side implementation of UDP client-server model
-
 #include <winsock2.h>
 #include <Ws2tcpip.h>
 #include <iostream>
@@ -7,9 +6,10 @@
 #include <string>
 
 #define MAXLINE 1024
-class SocketServer{ 
+
+class PoseSocketServer{ 
 public:
-	SocketServer(int);
+	PoseSocketServer(int);
 	std::string recvMessage();
 private:
 	struct sockaddr_in servaddr, cliaddr;
