@@ -58,6 +58,9 @@ namespace ExampleDriver {
         virtual void DebugRequest(const char* pchRequest, char* pchResponseBuffer, uint32_t unResponseBufferSize) = 0;
         virtual vr::DriverPose_t GetPose() = 0;
 
+        virtual vr::DriverPose_t setPoseOffset(float x, float y, float z) = 0;
+        virtual vr::DriverPose_t setPose(float x, float y, float z) = 0;
+
         ~IVRDevice() = default;
     };
 };

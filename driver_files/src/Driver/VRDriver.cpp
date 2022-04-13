@@ -15,7 +15,7 @@ vr::EVRInitError ExampleDriver::VRDriver::Init(vr::IVRDriverContext* pDriverCont
     Log("Activating ExampleDriver...");
 
     // Add a HMD
-    this->AddDevice(std::make_shared<HMDDevice>("Example_HMDDevice"));
+    // this->AddDevice(std::make_shared<HMDDevice>("Example_HMDDevice"));
 
     // Add a tracker
     this->AddDevice(std::make_shared<TrackerDevice>("Jason"));
@@ -46,14 +46,28 @@ void ExampleDriver::VRDriver::RunFrame()
     }
     this->openvr_events_ = events;
 
+    // Collect server data
+    std::string buffer = socketServer->recvMessage();
+    parseLandmarkData(buffer, poseData);
+
     // Update frame timing
     std::chrono::system_clock::time_point now = std::chrono::system_clock::now();
     this->frame_timing_ = std::chrono::duration_cast<std::chrono::milliseconds>(now - this->last_frame_time_);
     this->last_frame_time_ = now;
 
     // Update devices
-    for (auto& device : this->devices_)
+    for (auto& device : this->devices_) {
         device->Update();
+        if (device->GetDeviceType() == DeviceType::TRACKER) {
+            Log("PoseData[13][0] -> " + std::to_string(poseData[13][0]));
+            Log("PoseData[13][1] -> " + std::to_string(poseData[13][1]));
+            Log("PoseData[13][2] -> " + std::to_string(poseData[13][2]));
+            device->setPose(poseData[13][0], poseData[13][1], poseData[13][2]);
+        }
+        else {
+            Log("Device " + device->GetSerial() + " not a tracker. Skipping...");
+        }
+    }
 }
 
 bool ExampleDriver::VRDriver::ShouldBlockStandbyMode()

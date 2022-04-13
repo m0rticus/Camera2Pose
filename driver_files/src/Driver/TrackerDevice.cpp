@@ -39,12 +39,12 @@ void ExampleDriver::TrackerDevice::Update()
     }
 
     // Setup pose for this frame
-    auto pose = IVRDevice::MakeDefaultPose();
+    auto pose = last_pose_;
 
     // Find a HMD
     auto devices = GetDriver()->GetDevices();
     auto hmd = std::find_if(devices.begin(), devices.end(), [](const std::shared_ptr<IVRDevice>& device_ptr) {return device_ptr->GetDeviceType() == DeviceType::HMD; });
-
+    /*
     pose = setPoseOffset(3, 6, 0);
 
     pose.vecPosition[0] = pose.vecPosition[0] + 3;
@@ -54,6 +54,7 @@ void ExampleDriver::TrackerDevice::Update()
     pose.vecPosition[0] = pose.vecPosition[0] + 3;
     pose.vecPosition[1] = pose.vecPosition[1] + 6;
     pose.vecPosition[2] = pose.vecPosition[2];
+    */
 
     // Post pose
     GetDriver()->GetDriverHost()->TrackedDevicePoseUpdated(this->device_index_, pose, sizeof(vr::DriverPose_t));
@@ -144,6 +145,7 @@ vr::DriverPose_t ExampleDriver::TrackerDevice::setPoseOffset(float x, float y, f
     pose.vecPosition[0] = pose.vecPosition[0] + x;
     pose.vecPosition[1] = pose.vecPosition[1] + y;
     pose.vecPosition[2] = pose.vecPosition[2] + z;
+    last_pose_ = pose;
     return pose;
 }
 
@@ -152,5 +154,6 @@ vr::DriverPose_t ExampleDriver::TrackerDevice::setPose(float x, float y, float z
     pose.vecPosition[0] = x;
     pose.vecPosition[1] = y;
     pose.vecPosition[2] = z;
+    last_pose_ = pose;
     return pose;
 }
