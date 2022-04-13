@@ -158,3 +158,35 @@ vr::IVRServerDriverHost* ExampleDriver::VRDriver::GetDriverHost()
 {
     return vr::VRServerDriverHost();
 }
+
+// function that takes in a std::string of data and returns a 2 dimensional list of landmark coordinates
+// important shit for wherever I run this function
+// float landmark[33][3];
+// parse_landmark(buffer, landmark);
+int ExampleDriver::VRDriver::parseLandmarkData(std::string buffer, float(&poseData)[33][3])
+{
+    // create stream for easy iteration over words
+    std::istringstream iss(buffer);
+    // iterate over string, convert each element to a float and stick into landmark
+    for (int i = 0; i < 33; i++)
+    {
+        std::cout << "Landmark: " << i << "\n";
+        for (int j = 0; j < 3; j++)
+        {
+            // read from string if it's not empty, otherwise end
+            if (iss)
+            {
+                // store next stream value in a temp before updating landmark
+                std::string temp;
+                iss >> temp;
+                poseData[i][j] = std::stof(temp);
+            }
+            else
+            {
+                return 0;
+            }
+        }
+    }
+
+
+}

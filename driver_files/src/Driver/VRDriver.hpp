@@ -33,9 +33,12 @@ namespace ExampleDriver {
         virtual void EnterStandby() override;
         virtual void LeaveStandby() override;
         virtual ~VRDriver() = default;
+        
+        int parseLandmarkData(std::string buffer, float(&poseData)[33][3]);
 
     private:
         PoseSocketServer* socketServer;
+        float poseData[33][3];
         std::vector<std::shared_ptr<IVRDevice>> devices_;
         std::vector<vr::VREvent_t> openvr_events_;
         std::chrono::milliseconds frame_timing_ = std::chrono::milliseconds(16);

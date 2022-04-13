@@ -52,41 +52,6 @@ std::string PoseSocketServer::recvMessage(){
     return buffer;
 }
 
-// function that takes in a std::string of data and returns a 2 dimensional list of landmark coordinates
-// important shit for wherever I run this function
-// float landmark[33][3];
-// parse_landmark(buffer, landmark);
-int parse_landmark(std::string buffer, float (&landmark)[33][3])
-{
-	// create stream for easy iteration over words
-    std::istringstream iss(buffer);
-    // iterate over string, convert each element to a float and stick into landmark
-    for (int i = 0; i < 33; i++)
-    {
-        std::cout << "Landmark: "<< i << "\n";
-        for(int j = 0; j < 3; j++)
-        {
-            std::cout << "Coordinate: "<< j << "\n";
-            // read from string if it's not empty, otherwise end
-            if(iss)
-            {
-                // store next stream value in a temp before updating landmark
-                std::string temp;
-                iss >> temp;
-                std::cout << "Temp: " << temp << "\n";
-                landmark[i][j] = std::stof(temp);
-                std::cout << landmark[i][j] << "\n";
-            }
-            else
-            {
-                return 0;
-            }
-        }
-    }
-
-    
-}
-
 /*
 // Driver code
 int main() {
