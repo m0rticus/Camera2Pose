@@ -38,7 +38,7 @@ namespace ExampleDriver {
 
     private:
         PoseSocketServer* socketServer;
-        float poseData[33][3];
+        double poseData[33][3];
         std::vector<std::shared_ptr<IVRDevice>> devices_;
         std::vector<vr::VREvent_t> openvr_events_;
         std::chrono::milliseconds frame_timing_ = std::chrono::milliseconds(16);

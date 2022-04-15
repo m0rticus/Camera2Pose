@@ -62,17 +62,17 @@ void ExampleDriver::VRDriver::RunFrame()
     for (auto& device : this->devices_) {
         device->Update();
         // Log("Updating device " + device->GetSerial());
-        /*
+        
         if (device->GetDeviceType() == DeviceType::TRACKER) {
             Log("PoseData[13][0] -> " + std::to_string(poseData[13][0]));
             Log("PoseData[13][1] -> " + std::to_string(poseData[13][1]));
             Log("PoseData[13][2] -> " + std::to_string(poseData[13][2]));
-            device->setPose(0, poseData[13][1], 0);
+            device->setPose(0.0, poseData[13][1], 0.0);
         }
         else {
             Log("Device " + device->GetSerial() + " not a tracker. Skipping...");
         }
-        */
+        
     }
 }
 
@@ -183,7 +183,7 @@ vr::IVRServerDriverHost* ExampleDriver::VRDriver::GetDriverHost()
 // important shit for wherever I run this function
 // float landmark[33][3];
 // parse_landmark(buffer, landmark);
-int ExampleDriver::VRDriver::parseLandmarkData(std::string buffer, float(&poseData)[33][3])
+int ExampleDriver::VRDriver::parseLandmarkData(std::string buffer, double(&poseData)[33][3])
 {
     // create stream for easy iteration over words
     std::istringstream iss(buffer);
@@ -199,7 +199,7 @@ int ExampleDriver::VRDriver::parseLandmarkData(std::string buffer, float(&poseDa
                 // store next stream value in a temp before updating landmark
                 std::string temp;
                 iss >> temp;
-                poseData[i][j] = std::stof(temp);
+                poseData[i][j] = std::stod(temp);
             }
             else
             {
