@@ -48,7 +48,10 @@ void ExampleDriver::VRDriver::RunFrame()
 
     // Collect server data
     std::string buffer = socketServer->recvMessage();
-    // parseLandmarkData(buffer, poseData);
+
+    if (buffer != "") {
+        parseLandmarkData(buffer, poseData);
+    }
 
     // Update frame timing
     std::chrono::system_clock::time_point now = std::chrono::system_clock::now();
@@ -64,7 +67,7 @@ void ExampleDriver::VRDriver::RunFrame()
             Log("PoseData[13][0] -> " + std::to_string(poseData[13][0]));
             Log("PoseData[13][1] -> " + std::to_string(poseData[13][1]));
             Log("PoseData[13][2] -> " + std::to_string(poseData[13][2]));
-            // device->setPose(0, poseData[13][1], 0);
+            device->setPose(0, poseData[13][1], 0);
         }
         else {
             Log("Device " + device->GetSerial() + " not a tracker. Skipping...");

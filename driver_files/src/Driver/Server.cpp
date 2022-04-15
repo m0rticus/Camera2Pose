@@ -43,13 +43,34 @@ PoseSocketServer::PoseSocketServer(int aPort = 5005): port(aPort){
 }
 
 std::string PoseSocketServer::recvMessage(){ 
-    int n;
-    int len = sizeof(cliaddr);
-    n = recvfrom(sockfd, buffer, MAXLINE,
-                0, ( struct sockaddr *) &cliaddr,
-                (socklen_t* ) &len);
-    buffer[n] = '\0';
-    return buffer;
+    int max_fd = sockfd;
+    fd_set all_fds;
+    FD_ZERO(&all_fds);
+    FD_SET(sockfd, &all_fds);
+
+    struct timeval timeout_val;
+    timeout_val.tv_sec = (long int)0;
+    timeout_val.tv_usec = 5000;
+
+    if (select(max_fd + 1, &all_fds, NULL, NULL, &timeout_val) < 0) {
+        #ifdef _WIN32
+        printf("Failed, error code of " + WSAGetLastError());
+        #else
+        perror("select error");
+        #endif
+        exit(EXIT_FAILURE);
+    }
+
+    if (FD_ISSET(sockfd, &all_fds)) {
+        int n;
+        int len = sizeof(cliaddr);
+        n = recvfrom(sockfd, buffer, MAXLINE,
+            0, (struct sockaddr*)&cliaddr,
+            (socklen_t*)&len);
+        buffer[n] = '\0';
+        return buffer;
+    }
+    return "";
 }
 
 /*

@@ -38,7 +38,8 @@ class PoseDetector:
             for markId, landmark in enumerate(self.results.pose_landmarks.landmark):
                 h, w, c = img.shape
                 # print(markId, landmark)
-                cx, cy, cz = int(landmark.x * w), int(landmark.y * h), int(landmark.z * c)
+                # cx, cy, cz = int(landmark.x * w), int(landmark.y * h), int(landmark.z * c)
+                cx, cy, cz = landmark.x, landmark.y, landmark.z
                 lmList.append([cx, cy, cz])
                 # cv2.circle(img, (cx, cy), 10, (255, 0, 125), cv2.FILLED)
         return lmList
@@ -61,6 +62,9 @@ def main():
         lmList = detector.findPosition(img)
 
         if len(lmList) >= 32:
+            print("x is" + str(lmList[13][0]))
+            print("y is" + str(lmList[13][1]))
+            print("z is" + str(lmList[13][2]))
             socket_client.send_landmark_data(lmList)
         # if len(lmList) >= 29:
         #     print(lmList[27])
