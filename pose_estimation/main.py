@@ -39,7 +39,7 @@ class PoseDetector:
                 h, w, c = img.shape
                 # print(markId, landmark)
                 # cx, cy, cz = int(landmark.x * w), int(landmark.y * h), int(landmark.z * c)
-                cx, cy, cz = landmark.x, landmark.y, landmark.z
+                cx, cy, cz = round(landmark.x, 6), round(landmark.y, 6), round(landmark.z, 6)
                 lmList.append([cx, cy, cz])
                 # cv2.circle(img, (cx, cy), 10, (255, 0, 125), cv2.FILLED)
         return lmList

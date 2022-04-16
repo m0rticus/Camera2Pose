@@ -62,17 +62,9 @@ void ExampleDriver::VRDriver::RunFrame()
     for (auto& device : this->devices_) {
         device->Update();
         // Log("Updating device " + device->GetSerial());
-        
         if (device->GetDeviceType() == DeviceType::TRACKER) {
-            Log("PoseData[13][0] -> " + std::to_string(poseData[13][0]));
-            Log("PoseData[13][1] -> " + std::to_string(poseData[13][1]));
-            Log("PoseData[13][2] -> " + std::to_string(poseData[13][2]));
-            device->setPose(0.0, poseData[13][1], 0.0);
-        }
-        else {
-            Log("Device " + device->GetSerial() + " not a tracker. Skipping...");
-        }
-        
+            device->setPose(poseData[13][0], poseData[13][1], poseData[13][2]);
+        }    
     }
 }
 

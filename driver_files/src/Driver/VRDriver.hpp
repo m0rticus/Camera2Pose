@@ -34,7 +34,7 @@ namespace ExampleDriver {
         virtual void LeaveStandby() override;
         virtual ~VRDriver() = default;
         
-        int parseLandmarkData(std::string buffer, float(&poseData)[33][3]);
+        int parseLandmarkData(std::string buffer, double(&poseData)[33][3]);
 
     private:
         PoseSocketServer* socketServer;

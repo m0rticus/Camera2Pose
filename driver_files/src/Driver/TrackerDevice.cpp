@@ -139,25 +139,6 @@ vr::DriverPose_t ExampleDriver::TrackerDevice::GetPose()
 {
     return last_pose_;
 }
-	
-vr::DriverPose_t ExampleDriver::TrackerDevice::setPoseOffset(float x, float y, float z) {
-    auto pose = last_pose_;
-    pose.vecPosition[0] = pose.vecPosition[0] + x;
-    pose.vecPosition[1] = pose.vecPosition[1] + y;
-    pose.vecPosition[2] = pose.vecPosition[2] + z;
-    last_pose_ = pose;
-    return pose;
-}
-
-vr::DriverPose_t ExampleDriver::TrackerDevice::setPose(float x, float y, float z) {
-    auto pose = last_pose_;
-    pose.vecPosition[0] = x;
-    pose.vecPosition[1] = y;
-    pose.vecPosition[2] = z;
-    last_pose_ = pose;
-    return pose;
-}
-
 
 vr::DriverPose_t ExampleDriver::TrackerDevice::setPoseOffset(double x, double y, double z) {
     auto pose = last_pose_;
