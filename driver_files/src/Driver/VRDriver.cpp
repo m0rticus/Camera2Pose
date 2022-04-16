@@ -1,8 +1,9 @@
 #include "VRDriver.hpp"
 #include <Driver/HMDDevice.hpp>
 #include <Driver/TrackerDevice.hpp>
-// #include <Driver/ControllerDevice.hpp>
-// #include <Driver/TrackingReferenceDevice.hpp>
+#include <Driver/Server.hpp>
+
+#define MAXLINE 1024
 
 vr::EVRInitError ExampleDriver::VRDriver::Init(vr::IVRDriverContext* pDriverContext)
 {
@@ -14,11 +15,7 @@ vr::EVRInitError ExampleDriver::VRDriver::Init(vr::IVRDriverContext* pDriverCont
     Log("Activating ExampleDriver...");
 
     // Add a HMD
-    this->AddDevice(std::make_shared<HMDDevice>("Example_HMDDevice"));
-
-    // Add a couple controllers
-    // this->AddDevice(std::make_shared<ControllerDevice>("Example_ControllerDevice_Left", ControllerDevice::Handedness::LEFT));
-    // this->AddDevice(std::make_shared<ControllerDevice>("Example_ControllerDevice_Right", ControllerDevice::Handedness::RIGHT));
+    // this->AddDevice(std::make_shared<HMDDevice>("Example_HMDDevice"));
 
     // Add a tracker
     this->AddDevice(std::make_shared<TrackerDevice>("Jason"));
@@ -27,10 +24,7 @@ vr::EVRInitError ExampleDriver::VRDriver::Init(vr::IVRDriverContext* pDriverCont
     this->AddDevice(std::make_shared<TrackerDevice>("Chris"));
     this->AddDevice(std::make_shared<TrackerDevice>("Alexis"));
 
-    // Add a couple tracking references
-    // this->AddDevice(std::make_shared<TrackingReferenceDevice>("Example_TrackingReference_A"));
-    // this->AddDevice(std::make_shared<TrackingReferenceDevice>("Example_TrackingReference_B"));
-
+    socketServer = new PoseSocketServer(5005);
     Log("ExampleDriver Loaded Successfully");
 
 	return vr::VRInitError_None;
@@ -38,6 +32,7 @@ vr::EVRInitError ExampleDriver::VRDriver::Init(vr::IVRDriverContext* pDriverCont
 
 void ExampleDriver::VRDriver::Cleanup()
 {
+    delete socketServer;
 }
 
 void ExampleDriver::VRDriver::RunFrame()
@@ -51,14 +46,26 @@ void ExampleDriver::VRDriver::RunFrame()
     }
     this->openvr_events_ = events;
 
+    // Collect server data
+    std::string buffer = socketServer->recvMessage();
+
+    if (buffer != "") {
+        parseLandmarkData(buffer, poseData);
+    }
+
     // Update frame timing
     std::chrono::system_clock::time_point now = std::chrono::system_clock::now();
     this->frame_timing_ = std::chrono::duration_cast<std::chrono::milliseconds>(now - this->last_frame_time_);
     this->last_frame_time_ = now;
 
     // Update devices
-    for (auto& device : this->devices_)
+    for (auto& device : this->devices_) {
         device->Update();
+        // Log("Updating device " + device->GetSerial());
+        if (device->GetDeviceType() == DeviceType::TRACKER) {
+            device->setPose(poseData[13][0], poseData[13][1], poseData[13][2]);
+        }    
+    }
 }
 
 bool ExampleDriver::VRDriver::ShouldBlockStandbyMode()
@@ -162,4 +169,36 @@ vr::CVRPropertyHelpers* ExampleDriver::VRDriver::GetProperties()
 vr::IVRServerDriverHost* ExampleDriver::VRDriver::GetDriverHost()
 {
     return vr::VRServerDriverHost();
+}
+
+// function that takes in a std::string of data and returns a 2 dimensional list of landmark coordinates
+// important shit for wherever I run this function
+// float landmark[33][3];
+// parse_landmark(buffer, landmark);
+int ExampleDriver::VRDriver::parseLandmarkData(std::string buffer, double(&poseData)[33][3])
+{
+    // create stream for easy iteration over words
+    std::istringstream iss(buffer);
+    // iterate over string, convert each element to a float and stick into landmark
+    for (int i = 0; i < 33; i++)
+    {
+        std::cout << "Landmark: " << i << "\n";
+        for (int j = 0; j < 3; j++)
+        {
+            // read from string if it's not empty, otherwise end
+            if (iss)
+            {
+                // store next stream value in a temp before updating landmark
+                std::string temp;
+                iss >> temp;
+                poseData[i][j] = std::stod(temp);
+            }
+            else
+            {
+                return 0;
+            }
+        }
+    }
+
+
 }
