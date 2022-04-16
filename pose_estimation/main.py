@@ -33,7 +33,7 @@ class PoseDetector:
 
     def findPosition(self, img, draw=True):
         lmList = []
-        if self.results.pose_landmarks:
+        if self.results.pose_world_landmarks:
             # get precise x and y coordinates of each landmark
             for markId, landmark in enumerate(self.results.pose_landmarks.landmark):
                 h, w, c = img.shape
