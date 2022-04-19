@@ -2,6 +2,7 @@
 #include <Driver/HMDDevice.hpp>
 #include <Driver/TrackerDevice.hpp>
 #include <Driver/Server.hpp>
+#include <cmath>   
 
 #define MAXLINE 1024
 
@@ -58,13 +59,34 @@ void ExampleDriver::VRDriver::RunFrame()
     this->frame_timing_ = std::chrono::duration_cast<std::chrono::milliseconds>(now - this->last_frame_time_);
     this->last_frame_time_ = now;
 
-    // Update devices
+    //this is bad to do 
+    vr::DriverPose_t HeadPose; 
+    for (auto& device : this->devices_) {
+        device->Update();
+        std::string messageToSend;
+        socketServer->sendMessage(messageToSend);
+        /*
+        if (device->GetDeviceType() == DeviceType::HMD) {
+            HeadPose = device->GetPose();
+        }
+        */
+    }
+    // double centerHipX, centerHipY; 
+    // centerHipX = HeadPose.vecPosition[0] - poseData[0][0];
+    // centerHipY = HeadPose.vecPosition[1] - poseData[0][1];
     for (auto& device : this->devices_) {
         device->Update();
         // Log("Updating device " + device->GetSerial());
         if (device->GetDeviceType() == DeviceType::TRACKER) {
-            device->setPose(poseData[13][0], poseData[13][1], poseData[13][2]);
-        }    
+            // Log("PoseData[13][0] -> " + std::to_string(poseData[13][0]));
+            // Log("PoseData[13][1] -> " + std::to_string(poseData[13][1]));
+            // Log("PoseData[13][2] -> " + std::to_string(poseData[13][2]));
+            // device->setPose(centerHipX, centerHipY, 0.0);
+        }
+        else {
+            Log("Device " + device->GetSerial() + " not a tracker. Skipping...");
+        }
+        
     }
 }
 

@@ -11,6 +11,7 @@ class PoseSocketServer{
 public:
 	PoseSocketServer(int);
 	std::string recvMessage();
+	void sendMessage(std::string);
 private:
 	struct sockaddr_in servaddr, cliaddr;
 	int sockfd;

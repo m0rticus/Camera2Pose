@@ -44,17 +44,6 @@ void ExampleDriver::TrackerDevice::Update()
     // Find a HMD
     auto devices = GetDriver()->GetDevices();
     auto hmd = std::find_if(devices.begin(), devices.end(), [](const std::shared_ptr<IVRDevice>& device_ptr) {return device_ptr->GetDeviceType() == DeviceType::HMD; });
-    /*
-    pose = setPoseOffset(3, 6, 0);
-
-    pose.vecPosition[0] = pose.vecPosition[0] + 3;
-    pose.vecPosition[1] = pose.vecPosition[1] + 6;
-    pose.vecPosition[2] = pose.vecPosition[2];
-
-    pose.vecPosition[0] = pose.vecPosition[0] + 3;
-    pose.vecPosition[1] = pose.vecPosition[1] + 6;
-    pose.vecPosition[2] = pose.vecPosition[2];
-    */
 
     // Post pose
     GetDriver()->GetDriverHost()->TrackedDevicePoseUpdated(this->device_index_, pose, sizeof(vr::DriverPose_t));

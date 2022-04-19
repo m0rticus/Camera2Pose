@@ -73,6 +73,13 @@ std::string PoseSocketServer::recvMessage(){
     return "";
 }
 
+void PoseSocketServer::sendMessage(std::string content) {
+    const char* message = content.c_str();
+    int len = sizeof(cliaddr);
+    sendto(sockfd, (const char*)message, strlen(message), 0, (const struct sockaddr*)&cliaddr,
+        len);
+}
+
 /*
 // Driver code
 int main() {

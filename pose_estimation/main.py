@@ -33,9 +33,9 @@ class PoseDetector:
 
     def findPosition(self, img, draw=True):
         lmList = []
-        if self.results.pose_landmarks:
+        if self.results.pose_world_landmarks:
             # get precise x and y coordinates of each landmark
-            for markId, landmark in enumerate(self.results.pose_landmarks.landmark):
+            for markId, landmark in enumerate(self.results.pose_world_landmarks.landmark):
                 h, w, c = img.shape
                 # print(markId, landmark)
                 # cx, cy, cz = int(landmark.x * w), int(landmark.y * h), int(landmark.z * c)
@@ -53,6 +53,15 @@ def main():
     detector = PoseDetector()
     socket_client = socketClient.CommunicationSocket()
 
+    # sync phase
+    # time.sleep(10)
+    # success, img = cap.read()
+    # img = detector.findPose(img)
+    # lmList = detector.findPosition(img)
+    # offsetList = [lmList[0][0], 0.0, lmList[0][2]]
+
+
+
     while True:
         # read in the image
         success, img = cap.read()
@@ -65,6 +74,7 @@ def main():
             print("x is" + str(lmList[13][0]))
             print("y is" + str(lmList[13][1]))
             print("z is" + str(lmList[13][2]))
+            # lmList.append(offsetList)
             socket_client.send_landmark_data(lmList)
         # if len(lmList) >= 29:
         #     print(lmList[27])
