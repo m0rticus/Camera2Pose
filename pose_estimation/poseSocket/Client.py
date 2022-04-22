@@ -21,7 +21,7 @@ class CommunicationSocket:
 	
 	def recvMessage(self):
 		data = self.client_socket.recv(1024).decode()
-		print(data)
+		return data
 		
 def client_program():
     client_socket = CommunicationSocket()

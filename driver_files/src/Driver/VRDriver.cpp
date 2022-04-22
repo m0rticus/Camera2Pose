@@ -26,6 +26,7 @@ vr::EVRInitError ExampleDriver::VRDriver::Init(vr::IVRDriverContext* pDriverCont
     this->AddDevice(std::make_shared<TrackerDevice>("Alexis"));
 
     socketServer = new PoseSocketServer(5005);
+
     Log("ExampleDriver Loaded Successfully");
 
 	return vr::VRInitError_None;
@@ -48,23 +49,18 @@ void ExampleDriver::VRDriver::RunFrame()
     this->openvr_events_ = events;
 
     // Collect server data
-    std::string buffer = socketServer->recvMessage();
-
-    if (buffer != "") {
-        parseLandmarkData(buffer, poseData);
-    }
+    // std::string buffer = socketServer->recvMessage();
+    std::string messageToSend = "Hello from VR client";
+    socketServer->sendMessage(messageToSend);
 
     // Update frame timing
     std::chrono::system_clock::time_point now = std::chrono::system_clock::now();
     this->frame_timing_ = std::chrono::duration_cast<std::chrono::milliseconds>(now - this->last_frame_time_);
     this->last_frame_time_ = now;
 
-    //this is bad to do 
     vr::DriverPose_t HeadPose; 
     for (auto& device : this->devices_) {
         device->Update();
-        std::string messageToSend;
-        socketServer->sendMessage(messageToSend);
         /*
         if (device->GetDeviceType() == DeviceType::HMD) {
             HeadPose = device->GetPose();
