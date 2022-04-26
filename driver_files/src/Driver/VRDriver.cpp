@@ -2,6 +2,7 @@
 #include <Driver/HMDDevice.hpp>
 #include <Driver/TrackerDevice.hpp>
 #include <Driver/Server.hpp>
+#include <openvr_driver.h>
 #include <cmath>   
 
 #define MAXLINE 1024
@@ -50,40 +51,47 @@ void ExampleDriver::VRDriver::RunFrame()
 
     // Collect server data
     // std::string buffer = socketServer->recvMessage();
-    std::string messageToSend = "Hello from VR client";
-    socketServer->sendMessage(messageToSend);
+    // std::string messageToSend = "Hello from VR client";
+    // socketServer->sendMessage(messageToSend);
 
     // Update frame timing
     std::chrono::system_clock::time_point now = std::chrono::system_clock::now();
     this->frame_timing_ = std::chrono::duration_cast<std::chrono::milliseconds>(now - this->last_frame_time_);
     this->last_frame_time_ = now;
 
-    vr::DriverPose_t HeadPose; 
-    for (auto& device : this->devices_) {
-        device->Update();
-        /*
-        if (device->GetDeviceType() == DeviceType::HMD) {
-            HeadPose = device->GetPose();
+    // Collect pose data of other hardware
+    int HMDidx = -1;
+    vr::TrackedDevicePose_t* rawPoseData = new vr::TrackedDevicePose_t[vr::k_unMaxTrackedDeviceCount];
+    vr::VRServerDriverHost()->GetRawTrackedDevicePoses(0, rawPoseData, vr::k_unMaxTrackedDeviceCount);
+    vr::CVRPropertyHelpers* props = vr::VRProperties();
+    for (int i = 0; i < vr::k_unMaxTrackedDeviceCount; i++) {
+        vr::PropertyContainerHandle_t container = GetProperties()->TrackedDeviceToPropertyContainer(i);
+        vr::ETrackedPropertyError err;
+        int32_t result = props->GetInt32Property(container, vr::ETrackedDeviceProperty::Prop_DeviceClass_Int32, &err);
+        if (result == vr::ETrackedDeviceClass::TrackedDeviceClass_HMD)
+        {
+            HMDidx = i;
+            break;
         }
-        */
     }
-    // double centerHipX, centerHipY; 
-    // centerHipX = HeadPose.vecPosition[0] - poseData[0][0];
-    // centerHipY = HeadPose.vecPosition[1] - poseData[0][1];
+    vr::PropertyContainerHandle_t HMDcontainer = GetProperties()->TrackedDeviceToPropertyContainer(HMDidx);
+    socketServer->sendMessage("HMD index is " + std::to_string(HMDidx));
+    vr::HmdMatrix34_t HMDpose = rawPoseData[0].mDeviceToAbsoluteTracking;
+
+    // std::string messageToSend = "start message here";
+    // socketServer->sendMessage(messageToSend);
     for (auto& device : this->devices_) {
         device->Update();
         // Log("Updating device " + device->GetSerial());
         if (device->GetDeviceType() == DeviceType::TRACKER) {
-            // Log("PoseData[13][0] -> " + std::to_string(poseData[13][0]));
-            // Log("PoseData[13][1] -> " + std::to_string(poseData[13][1]));
-            // Log("PoseData[13][2] -> " + std::to_string(poseData[13][2]));
-            // device->setPose(centerHipX, centerHipY, 0.0);
+            device->setPose(HMDpose.m[0][3], 0, HMDpose.m[2][3]);
         }
         else {
-            Log("Device " + device->GetSerial() + " not a tracker. Skipping...");
+            socketServer->sendMessage("Device " + device->GetSerial() + " not a tracker. Skipping...");
         }
-        
     }
+    // messageToSend = "end message here";
+    // socketServer->sendMessage(messageToSend);
 }
 
 bool ExampleDriver::VRDriver::ShouldBlockStandbyMode()

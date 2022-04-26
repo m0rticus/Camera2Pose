@@ -82,13 +82,12 @@ std::string PoseSocketServer::recvMessage(){
 }
 
 void PoseSocketServer::sendMessage(std::string content) {
-    char* helloMessage = &content[0];
-    const char* message = content.c_str();
-
-    char* helloMessage2 = "blah bloo good practice";
+    char* message = new char[content.size() + 1];
+    std::copy(content.begin(), content.end(), message);
+    message[content.size()] = '\0';
     int len = sizeof(consoleaddr);
-    sendto(sockfd, message, strlen(helloMessage), 0, (const struct sockaddr*)&consoleaddr, len);
-    sendto(sockfd, (const char*)helloMessage2, strlen(helloMessage2), 0, (const struct sockaddr*)&consoleaddr, len);
+    sendto(sockfd, message, strlen(message), 0, (const struct sockaddr*)&consoleaddr, len);
+    delete[] message;
 }
 
 /*
