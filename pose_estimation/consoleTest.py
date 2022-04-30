@@ -39,7 +39,6 @@ while(True):
     bytesAddressPair = UDPServerSocket.recvfrom(bufferSize)
 
     message = bytesAddressPair[0]
-
     address = bytesAddressPair[1]
 
     clientMsg = "Message from Client:{}".format(message)
@@ -47,9 +46,3 @@ while(True):
     
     print(clientMsg)
     print(clientIP)
-
-   
-
-    # Sending a reply to client
-
-    UDPServerSocket.sendto(bytesToSend, address)

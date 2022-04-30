@@ -28,8 +28,6 @@ namespace ExampleDriver {
             virtual void DebugRequest(const char* pchRequest, char* pchResponseBuffer, uint32_t unResponseBufferSize) override;
             virtual vr::DriverPose_t GetPose() override;
             
-            // vr::DriverPose_t setPoseOffset(float x, float y, float z);
-            // vr::DriverPose_t setPose(float x, float y, float z);
             vr::DriverPose_t setPoseOffset(double x, double y, double z);
             vr::DriverPose_t setPose(double x, double y, double z);
     private:

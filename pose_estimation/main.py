@@ -1,10 +1,11 @@
 import cv2
 import mediapipe as mp
 import time
+from threading import Thread
 from poseSocket import Client as socketClient
 
 ###############################
-wCam, hCam = 1280, 720
+wCam, hCam = 1920, 1080
 ###############################
 
 class PoseDetector:
@@ -44,6 +45,31 @@ class PoseDetector:
                 # cv2.circle(img, (cx, cy), 10, (255, 0, 125), cv2.FILLED)
         return lmList
 
+class ThreadedCamera(object):
+    def __init__(self):
+        self.capture = cv2.VideoCapture(0, cv2.CAP_DSHOW)
+        self.capture.set(cv2.CAP_PROP_BUFFERSIZE, 2)
+
+        # FPS = 1/X
+        # X = desired FPS
+        self.FPS = 1/30
+        self.FPS_MS = int(self.FPS * 1000)
+
+        # Start frame retrieval thread
+        self.thread = Thread(target=self.update, args=())
+        self.thread.daemon = True
+        self.thread.start()
+
+    def update(self):
+        while True:
+            if self.capture.isOpened():
+                (self.status, self.frame) = self.capture.read()
+            time.sleep(self.FPS)
+
+    def show_frame(self):
+        cv2.imshow('frame', self.frame)
+        cv2.waitKey(self.FPS_MS)
+
 def main():
     # initialize camera
     cap = cv2.VideoCapture(0, cv2.CAP_DSHOW)
@@ -52,15 +78,6 @@ def main():
     prevTime = 0
     detector = PoseDetector()
     socket_client = socketClient.CommunicationSocket()
-
-    # sync phase
-    # time.sleep(10)
-    # success, img = cap.read()
-    # img = detector.findPose(img)
-    # lmList = detector.findPosition(img)
-    # offsetList = [lmList[0][0], 0.0, lmList[0][2]]
-
-
 
     while True:
         # read in the image
@@ -71,26 +88,22 @@ def main():
         lmList = detector.findPosition(img)
 
         if len(lmList) >= 32:
-            print("x is" + str(lmList[13][0]))
-            print("y is" + str(lmList[13][1]))
-            print("z is" + str(lmList[13][2]))
+            # print("x is" + str(lmList[13][0]))
+            # print("y is" + str(lmList[13][1]))
+            # print("z is" + str(lmList[13][2]))
             # lmList.append(offsetList)
             socket_client.send_landmark_data(lmList)
-        # if len(lmList) >= 29:
-        #     print(lmList[27])
-        #     cv2.circle(img, (lmList[28][1], lmList[28][2]), 15, (255, 255, 0), cv2.FILLED)
-        #     print(lmList[28])
-        #     cv2.circle(img, (lmList[27][1], lmList[27][2]), 15, (255, 255, 0), cv2.FILLED)
 
         # calculate fps
         currTime = time.time()
         fps = 1 / (currTime - prevTime)
         prevTime = currTime
 
+        print(fps)
         # update frame
-        cv2.putText(img, f'FPS: {int(fps)}', (40, 70), cv2.FONT_HERSHEY_SIMPLEX, 3, (0, 255, 255), 3)
-        cv2.imshow("Frame", img)
-        cv2.waitKey(1)
+        # cv2.putText(img, f'FPS: {int(fps)}', (40, 70), cv2.FONT_HERSHEY_SIMPLEX, 3, (0, 255, 255), 3)
+        # cv2.imshow("Frame", img)
+        # cv2.waitKey(1)
 
     socket_client.destroy()
 

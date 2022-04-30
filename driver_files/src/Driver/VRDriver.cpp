@@ -50,9 +50,11 @@ void ExampleDriver::VRDriver::RunFrame()
     this->openvr_events_ = events;
 
     // Collect server data
-    // std::string buffer = socketServer->recvMessage();
-    // std::string messageToSend = "Hello from VR client";
-    // socketServer->sendMessage(messageToSend);
+    std::string buffer = socketServer->recvMessage();
+    if (buffer != "") {
+        socketServer->sendMessage(buffer);
+        parseLandmarkData(buffer);
+    }
 
     // Update frame timing
     std::chrono::system_clock::time_point now = std::chrono::system_clock::now();
@@ -60,7 +62,7 @@ void ExampleDriver::VRDriver::RunFrame()
     this->last_frame_time_ = now;
 
     // Collect pose data of other hardware
-    int HMDidx = -1;
+    int HMDidx = 0;
     vr::TrackedDevicePose_t* rawPoseData = new vr::TrackedDevicePose_t[vr::k_unMaxTrackedDeviceCount];
     vr::VRServerDriverHost()->GetRawTrackedDevicePoses(0, rawPoseData, vr::k_unMaxTrackedDeviceCount);
     vr::CVRPropertyHelpers* props = vr::VRProperties();
@@ -74,24 +76,26 @@ void ExampleDriver::VRDriver::RunFrame()
             break;
         }
     }
+    // Get properties of Headset
     vr::PropertyContainerHandle_t HMDcontainer = GetProperties()->TrackedDeviceToPropertyContainer(HMDidx);
-    socketServer->sendMessage("HMD index is " + std::to_string(HMDidx));
     vr::HmdMatrix34_t HMDpose = rawPoseData[0].mDeviceToAbsoluteTracking;
 
-    // std::string messageToSend = "start message here";
-    // socketServer->sendMessage(messageToSend);
+    // Set the trackers equal to the hip (supposedly)
+    double centerHipX, centerHipY, centerHipZ;
+    centerHipX = HMDpose.m[0][3] + poseData[0][0];
+    centerHipY = HMDpose.m[1][3] + poseData[0][1];
+    centerHipZ = HMDpose.m[2][3] + poseData[0][2];
     for (auto& device : this->devices_) {
         device->Update();
-        // Log("Updating device " + device->GetSerial());
         if (device->GetDeviceType() == DeviceType::TRACKER) {
-            device->setPose(HMDpose.m[0][3], 0, HMDpose.m[2][3]);
+            device->setPose(centerHipX, centerHipY, centerHipZ);
         }
         else {
             socketServer->sendMessage("Device " + device->GetSerial() + " not a tracker. Skipping...");
         }
     }
-    // messageToSend = "end message here";
-    // socketServer->sendMessage(messageToSend);
+    delete[] rawPoseData;
+
 }
 
 bool ExampleDriver::VRDriver::ShouldBlockStandbyMode()
@@ -201,14 +205,13 @@ vr::IVRServerDriverHost* ExampleDriver::VRDriver::GetDriverHost()
 // important shit for wherever I run this function
 // float landmark[33][3];
 // parse_landmark(buffer, landmark);
-int ExampleDriver::VRDriver::parseLandmarkData(std::string buffer, double(&poseData)[33][3])
+int ExampleDriver::VRDriver::parseLandmarkData(std::string buffer)
 {
     // create stream for easy iteration over words
     std::istringstream iss(buffer);
     // iterate over string, convert each element to a float and stick into landmark
     for (int i = 0; i < 33; i++)
     {
-        std::cout << "Landmark: " << i << "\n";
         for (int j = 0; j < 3; j++)
         {
             // read from string if it's not empty, otherwise end
