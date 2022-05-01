@@ -5,7 +5,7 @@ from threading import Thread
 from poseSocket import Client as socketClient
 
 ###############################
-wCam, hCam = 1920, 1080
+wCam, hCam = 1280, 720
 ###############################
 
 class PoseDetector:
@@ -19,7 +19,7 @@ class PoseDetector:
 
         self.mpDraw = mp.solutions.drawing_utils
         self.mpPose = mp.solutions.pose
-        self.pose = self.mpPose.Pose(self.mode, 0, self.smooth, False, False, self.detectCon, self.trackCon)
+        self.pose = self.mpPose.Pose(self.mode, 1, self.smooth, False, False, self.detectCon, self.trackCon)
 
     def findPose(self, img, draw=True):
         img.flags.writeable = False
@@ -56,9 +56,14 @@ class ThreadedCamera(object):
         self.thread = Thread(target = self.update, args = ())
         self.thread.daemon = True
         self.thread.start()
+        
+        self.thread2 = Thread(target = self.update, args = ())
+        self.thread2.daemon = True
+        self.thread2.start()
 
         self.status = False
         self.frame = None
+        self.colorFrame = None
 
     def update(self):
         while True:

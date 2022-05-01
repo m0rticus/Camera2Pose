@@ -88,7 +88,7 @@ void ExampleDriver::VRDriver::RunFrame()
     for (auto& device : this->devices_) {
         device->Update();
         if (device->GetDeviceType() == DeviceType::TRACKER) {
-            device->setPose(centerHipX, centerHipY, centerHipZ);
+            device->setPose(centerHipX, centerHipY, 0);
         }
         else {
             socketServer->sendMessage("Device " + device->GetSerial() + " not a tracker. Skipping...");
