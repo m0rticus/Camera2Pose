@@ -98,20 +98,20 @@ void ExampleDriver::VRDriver::RunFrame()
     centerHipX = HMDpose.m[0][3] + poseData[0][0];
     centerHipY = HMDpose.m[1][3] + poseData[0][1];
     centerHipZ = HMDpose.m[2][3] + poseData[0][2];
-    for(int i : trackerNumbers ){ 
-        bodyTrackers[i]->setPose(centerHipX+poseData[i][0],centerHipX+poseData[i][1] ,0)
+    for(int i : trackerNumbers){ 
+        bodyTrackers[i]->setPose(centerHipX + poseData[i][0], centerHipY - poseData[i][1], 0);
     }
-    bodyTrackers[0]->setPose(HMDpose.m[0][3],HMDpose.m[1][3], 0);
-    bodyTrackers[33]->setPose(centerHipX,centerHipY, 0);
-    // for (auto& device : this->devices_) {
-    //     device->Update();
+    bodyTrackers[0]->setPose(HMDpose.m[0][3], HMDpose.m[1][3], 0);
+    bodyTrackers[33]->setPose(centerHipX, centerHipY, 0);
+    for (auto& device : this->devices_) {
+         device->Update();
     //     if (device->GetDeviceType() == DeviceType::TRACKER) {
     //         device->setPose(centerHipX, centerHipY, centerHipZ);
     //     }
     //     else {
     //         socketServer->sendMessage("Device " + device->GetSerial() + " not a tracker. Skipping...");
     //     }
-    // }
+    }
     delete[] rawPoseData;
 
 }
