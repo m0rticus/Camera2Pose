@@ -65,7 +65,7 @@ void ExampleDriver::VRDriver::RunFrame()
     // Collect server data
     std::string buffer = socketServer->recvMessage();
     if (buffer != "") {
-        socketServer->sendMessage(buffer);
+        // socketServer->sendMessage(buffer);
         parseLandmarkData(buffer);
     }
 
@@ -76,8 +76,10 @@ void ExampleDriver::VRDriver::RunFrame()
 
     // Collect pose data of other hardware
     int HMDidx = 0;
+
     vr::TrackedDevicePose_t* rawPoseData = new vr::TrackedDevicePose_t[vr::k_unMaxTrackedDeviceCount];
     vr::VRServerDriverHost()->GetRawTrackedDevicePoses(0, rawPoseData, vr::k_unMaxTrackedDeviceCount);
+    /* Commenting this out for now because we can safely assume that the headset index is 0 for most setups
     vr::CVRPropertyHelpers* props = vr::VRProperties();
     for (int i = 0; i < vr::k_unMaxTrackedDeviceCount; i++) {
         vr::PropertyContainerHandle_t container = GetProperties()->TrackedDeviceToPropertyContainer(i);
@@ -89,6 +91,7 @@ void ExampleDriver::VRDriver::RunFrame()
             break;
         }
     }
+    */
     // Get properties of Headset
     vr::PropertyContainerHandle_t HMDcontainer = GetProperties()->TrackedDeviceToPropertyContainer(HMDidx);
     vr::HmdMatrix34_t HMDpose = rawPoseData[0].mDeviceToAbsoluteTracking;
@@ -99,10 +102,10 @@ void ExampleDriver::VRDriver::RunFrame()
     centerHipY = HMDpose.m[1][3] + poseData[0][1];
     centerHipZ = HMDpose.m[2][3] + poseData[0][2];
     for(int i : trackerNumbers){ 
-        bodyTrackers[i]->setPose(centerHipX + poseData[i][0], centerHipY - poseData[i][1], 0);
+        bodyTrackers[i]->setPose(centerHipX + poseData[i][0], centerHipY - poseData[i][1], centerHipZ - poseData[i][2] + 0.1);
     }
     bodyTrackers[0]->setPose(HMDpose.m[0][3], HMDpose.m[1][3], 0);
-    bodyTrackers[33]->setPose(centerHipX, centerHipY, 0);
+    bodyTrackers[33]->setPose(centerHipX, centerHipY, centerHipZ);
     for (auto& device : this->devices_) {
          device->Update();
     //     if (device->GetDeviceType() == DeviceType::TRACKER) {
@@ -238,7 +241,10 @@ int ExampleDriver::VRDriver::parseLandmarkData(std::string buffer)
                 // store next stream value in a temp before updating landmark
                 std::string temp;
                 iss >> temp;
-                poseData[i][j] = std::stod(temp);
+                double cur_value = std::stod(temp);
+                if (abs(poseData[i][j] - cur_value) > 0.005) {
+                    poseData[i][j] = cur_value;
+                }
             }
             else
             {
