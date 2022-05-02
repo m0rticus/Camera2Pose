@@ -2,6 +2,8 @@
 #include <Driver/HMDDevice.hpp>
 #include <Driver/TrackerDevice.hpp>
 #include <Driver/Server.hpp>
+#include <openvr_driver.h>
+#include <cmath>   
 
 #define MAXLINE 1024
 
@@ -18,13 +20,26 @@ vr::EVRInitError ExampleDriver::VRDriver::Init(vr::IVRDriverContext* pDriverCont
     // this->AddDevice(std::make_shared<HMDDevice>("Example_HMDDevice"));
 
     // Add a tracker
-    this->AddDevice(std::make_shared<TrackerDevice>("Jason"));
-    this->AddDevice(std::make_shared<TrackerDevice>("Emory"));
-    this->AddDevice(std::make_shared<TrackerDevice>("Matthew"));
-    this->AddDevice(std::make_shared<TrackerDevice>("Chris"));
-    this->AddDevice(std::make_shared<TrackerDevice>("Alexis"));
+    bodyTrackers[0] = std::make_shared<TrackerDevice>("nose");
+    bodyTrackers[33] = std::make_shared<TrackerDevice>("pelvis");
+    bodyTrackers[31] = std::make_shared<TrackerDevice>("rightFoot");
+    bodyTrackers[32] = std::make_shared<TrackerDevice>("leftFoot");
+    bodyTrackers[14] = std::make_shared<TrackerDevice>("rightElbow");
+    bodyTrackers[13] = std::make_shared<TrackerDevice>("leftElbow");
+    bodyTrackers[16] = std::make_shared<TrackerDevice>("rightWrist");
+    bodyTrackers[15] = std::make_shared<TrackerDevice>("leftWrist");
+
+    this->AddDevice(bodyTrackers[0]);
+    this->AddDevice(bodyTrackers[33]);
+    this->AddDevice(bodyTrackers[31]);
+    this->AddDevice(bodyTrackers[32]);
+    this->AddDevice(bodyTrackers[14]);
+    this->AddDevice(bodyTrackers[13]);
+    this->AddDevice(bodyTrackers[16]);
+    this->AddDevice(bodyTrackers[15]);
 
     socketServer = new PoseSocketServer(5005);
+
     Log("ExampleDriver Loaded Successfully");
 
 	return vr::VRInitError_None;
@@ -48,9 +63,9 @@ void ExampleDriver::VRDriver::RunFrame()
 
     // Collect server data
     std::string buffer = socketServer->recvMessage();
-
     if (buffer != "") {
-        parseLandmarkData(buffer, poseData);
+        // socketServer->sendMessage(buffer);
+        parseLandmarkData(buffer);
     }
 
     // Update frame timing
@@ -58,14 +73,48 @@ void ExampleDriver::VRDriver::RunFrame()
     this->frame_timing_ = std::chrono::duration_cast<std::chrono::milliseconds>(now - this->last_frame_time_);
     this->last_frame_time_ = now;
 
-    // Update devices
-    for (auto& device : this->devices_) {
-        device->Update();
-        // Log("Updating device " + device->GetSerial());
-        if (device->GetDeviceType() == DeviceType::TRACKER) {
-            device->setPose(poseData[13][0], poseData[13][1], poseData[13][2]);
-        }    
+    // Collect pose data of other hardware
+    int HMDidx = 0;
+
+    vr::TrackedDevicePose_t* rawPoseData = new vr::TrackedDevicePose_t[vr::k_unMaxTrackedDeviceCount];
+    vr::VRServerDriverHost()->GetRawTrackedDevicePoses(0, rawPoseData, vr::k_unMaxTrackedDeviceCount);
+    /* Commenting this out for now because we can safely assume that the headset index is 0 for most setups
+    vr::CVRPropertyHelpers* props = vr::VRProperties();
+    for (int i = 0; i < vr::k_unMaxTrackedDeviceCount; i++) {
+        vr::PropertyContainerHandle_t container = GetProperties()->TrackedDeviceToPropertyContainer(i);
+        vr::ETrackedPropertyError err;
+        int32_t result = props->GetInt32Property(container, vr::ETrackedDeviceProperty::Prop_DeviceClass_Int32, &err);
+        if (result == vr::ETrackedDeviceClass::TrackedDeviceClass_HMD)
+        {
+            HMDidx = i;
+            break;
+        }
     }
+    */
+    // Get properties of Headset
+    vr::PropertyContainerHandle_t HMDcontainer = GetProperties()->TrackedDeviceToPropertyContainer(HMDidx);
+    vr::HmdMatrix34_t HMDpose = rawPoseData[0].mDeviceToAbsoluteTracking;
+
+    // Set the trackers equal to the hip (supposedly)
+    double centerHipX, centerHipY, centerHipZ;
+    centerHipX = HMDpose.m[0][3] + poseData[0][0];
+    centerHipY = HMDpose.m[1][3] + poseData[0][1];
+    centerHipZ = HMDpose.m[2][3] + poseData[0][2];
+    for(int i : trackerNumbers){ 
+        bodyTrackers[i]->setPose(centerHipX + poseData[i][0], centerHipY - poseData[i][1], centerHipZ - poseData[i][2] + 0.1);
+    }
+    bodyTrackers[0]->setPose(HMDpose.m[0][3], HMDpose.m[1][3], 0);
+    bodyTrackers[33]->setPose(centerHipX, centerHipY, centerHipZ);
+    for (auto& device : this->devices_) {
+         device->Update();
+    //     if (device->GetDeviceType() == DeviceType::TRACKER) {
+    //         device->setPose(centerHipX, centerHipY, centerHipZ);
+    //     }
+    //     else {
+    //         socketServer->sendMessage("Device " + device->GetSerial() + " not a tracker. Skipping...");
+    //     }
+    }
+    delete[] rawPoseData;
 }
 
 bool ExampleDriver::VRDriver::ShouldBlockStandbyMode()
@@ -175,14 +224,13 @@ vr::IVRServerDriverHost* ExampleDriver::VRDriver::GetDriverHost()
 // important shit for wherever I run this function
 // float landmark[33][3];
 // parse_landmark(buffer, landmark);
-int ExampleDriver::VRDriver::parseLandmarkData(std::string buffer, double(&poseData)[33][3])
+int ExampleDriver::VRDriver::parseLandmarkData(std::string buffer)
 {
     // create stream for easy iteration over words
     std::istringstream iss(buffer);
     // iterate over string, convert each element to a float and stick into landmark
     for (int i = 0; i < 33; i++)
     {
-        std::cout << "Landmark: " << i << "\n";
         for (int j = 0; j < 3; j++)
         {
             // read from string if it's not empty, otherwise end
@@ -191,7 +239,10 @@ int ExampleDriver::VRDriver::parseLandmarkData(std::string buffer, double(&poseD
                 // store next stream value in a temp before updating landmark
                 std::string temp;
                 iss >> temp;
-                poseData[i][j] = std::stod(temp);
+                double cur_value = std::stod(temp);
+                if (abs(poseData[i][j] - cur_value) > 0.005) {
+                    poseData[i][j] = cur_value;
+                }
             }
             else
             {
@@ -199,6 +250,5 @@ int ExampleDriver::VRDriver::parseLandmarkData(std::string buffer, double(&poseD
             }
         }
     }
-
 
 }

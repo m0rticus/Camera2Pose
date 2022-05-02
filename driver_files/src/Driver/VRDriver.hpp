@@ -34,11 +34,13 @@ namespace ExampleDriver {
         virtual void LeaveStandby() override;
         virtual ~VRDriver() = default;
         
-        int parseLandmarkData(std::string buffer, double(&poseData)[33][3]);
+        int parseLandmarkData(std::string buffer);
 
     private:
         PoseSocketServer* socketServer;
         double poseData[33][3];
+        int trackerNumbers[6] = {31,32,14,13,16,15};
+        std::shared_ptr<IVRDevice> bodyTrackers[34]; 
         std::vector<std::shared_ptr<IVRDevice>> devices_;
         std::vector<vr::VREvent_t> openvr_events_;
         std::chrono::milliseconds frame_timing_ = std::chrono::milliseconds(16);

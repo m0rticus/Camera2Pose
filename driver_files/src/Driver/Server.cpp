@@ -24,11 +24,19 @@ PoseSocketServer::PoseSocketServer(int aPort = 5005): port(aPort){
     }
     memset(&servaddr, 0, sizeof(servaddr));
     memset(&cliaddr, 0, sizeof(cliaddr));
+    memset(&consoleaddr, 0, sizeof(consoleaddr));
     // Bind the socket with the server address
 
     servaddr.sin_family = AF_INET; // IPv4
     servaddr.sin_addr.s_addr = INADDR_ANY;
     servaddr.sin_port = htons(port);
+  
+    consoleaddr.sin_family = AF_INET;
+    if (inet_pton(AF_INET, "127.0.0.1", &consoleaddr.sin_addr) <= 0) {
+        printf("\nInvalid address/ Address not supported \n");
+        exit(EXIT_FAILURE);
+    }
+    consoleaddr.sin_port = htons(5006);
 
     if ( bind(sockfd, (const struct sockaddr *)&servaddr,
             sizeof(servaddr)) < 0 )
@@ -73,6 +81,14 @@ std::string PoseSocketServer::recvMessage(){
     return "";
 }
 
+void PoseSocketServer::sendMessage(std::string content) {
+    char* message = new char[content.size() + 1];
+    std::copy(content.begin(), content.end(), message);
+    message[content.size()] = '\0';
+    int len = sizeof(consoleaddr);
+    sendto(sockfd, message, strlen(message), 0, (const struct sockaddr*)&consoleaddr, len);
+    delete[] message;
+}
 /*
 // Driver code
 int main() {

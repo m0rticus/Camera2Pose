@@ -16,10 +16,11 @@ void ExampleDriver::TrackerDevice::Update()
     if (this->device_index_ == vr::k_unTrackedDeviceIndexInvalid)
         return;
 
+    /*
     // Check if this device was asked to be identified
     auto events = GetDriver()->GetOpenVREvents();
     for (auto event : events) {
-        // Note here, event.trackedDeviceIndex does not necissarily equal this->device_index_, not sure why, but the component handle will match so we can just use that instead
+        // Note here, event.trackedDeviceIndex does not necessarily equal this->device_index_, not sure why, but the component handle will match so we can just use that instead
         //if (event.trackedDeviceIndex == this->device_index_) {
         if (event.eventType == vr::EVREventType::VREvent_Input_HapticVibration) {
             if (event.data.hapticVibration.componentHandle == this->haptic_component_) {
@@ -37,24 +38,13 @@ void ExampleDriver::TrackerDevice::Update()
             this->vibrate_anim_state_ = 0.0f;
         }
     }
-
+    */
     // Setup pose for this frame
     auto pose = last_pose_;
 
     // Find a HMD
     auto devices = GetDriver()->GetDevices();
     auto hmd = std::find_if(devices.begin(), devices.end(), [](const std::shared_ptr<IVRDevice>& device_ptr) {return device_ptr->GetDeviceType() == DeviceType::HMD; });
-    /*
-    pose = setPoseOffset(3, 6, 0);
-
-    pose.vecPosition[0] = pose.vecPosition[0] + 3;
-    pose.vecPosition[1] = pose.vecPosition[1] + 6;
-    pose.vecPosition[2] = pose.vecPosition[2];
-
-    pose.vecPosition[0] = pose.vecPosition[0] + 3;
-    pose.vecPosition[1] = pose.vecPosition[1] + 6;
-    pose.vecPosition[2] = pose.vecPosition[2];
-    */
 
     // Post pose
     GetDriver()->GetDriverHost()->TrackedDevicePoseUpdated(this->device_index_, pose, sizeof(vr::DriverPose_t));

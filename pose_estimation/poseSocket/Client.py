@@ -18,6 +18,10 @@ class CommunicationSocket:
 	def send_landmark_data(self, lmList):
 		message = ' '.join([(' '.join([str(coordinate) for coordinate in landmark])) for landmark in lmList]) # convert two dimensional list to a string
 		self.sendMessage(message)
+	
+	def recvMessage(self):
+		data = self.client_socket.recv(1024).decode()
+		return data
 		
 def client_program():
     client_socket = CommunicationSocket()
