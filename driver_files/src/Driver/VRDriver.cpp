@@ -38,7 +38,6 @@ vr::EVRInitError ExampleDriver::VRDriver::Init(vr::IVRDriverContext* pDriverCont
     this->AddDevice(bodyTrackers[16]);
     this->AddDevice(bodyTrackers[15]);
 
-
     socketServer = new PoseSocketServer(5005);
 
     Log("ExampleDriver Loaded Successfully");
@@ -116,7 +115,6 @@ void ExampleDriver::VRDriver::RunFrame()
     //     }
     }
     delete[] rawPoseData;
-
 }
 
 bool ExampleDriver::VRDriver::ShouldBlockStandbyMode()
@@ -252,6 +250,5 @@ int ExampleDriver::VRDriver::parseLandmarkData(std::string buffer)
             }
         }
     }
-
 
 }
